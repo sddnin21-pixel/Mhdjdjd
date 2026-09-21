@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AniGallery · Thư viện ảnh Anime</title>
+<meta name="description" content="Thư viện ảnh anime chất lượng cao, cập nhật liên tục từ nhiều nguồn." />
+<link rel="preconnect" href="https://nekos.best" />
+<link rel="preconnect" href="https://api.waifu.pics" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>" />
+
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --bg:#08080f;
+  --panel:rgba(255,255,255,.045);
+  --panel-2:rgba(255,255,255,.08);
+  --border:rgba(255,255,255,.09);
+  --border-2:rgba(255,255,255,.16);
+  --text:#ececf5;
+  --muted:#8f8fa8;
+  --pink:#ff6ba6;
+  --violet:#a855f7;
+  --indigo:#6366f1;
+  --cyan:#22d3ee;
+  --grad:linear-gradient(135deg,#ff6ba6 0%,#a855f7 55%,#6366f1 100%);
+  --shadow:0 22px 60px -22px rgba(0,0,0,.9);
+  --radius:18px;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+
+/* ============ RESET ============ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+body::before{
+  content:"";
+  position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background:
+    radial-gradient(900px 620px at 10% -8%, rgba(255,107,166,.18), transparent 62%),
+    radial-gradient(820px 600px at 90% -2%, rgba(168,85,247,.17), transparent 62%),
+    radial-gradient(1000px 720px at 50% 112%, rgba(34,211,238,.10), transparent 62%);
+}
+body::after{
+  content:"";
+  position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.35;
+  background-image:radial-gradient(rgba(255,255,255,.045) 1px, transparent 1px);
+  background-size:26px 26px;
+  mask-image:radial-gradient(ellipse 90% 60% at 50% 0%, #000 20%, transparent 78%);
+  -webkit-mask-image:radial-gradient(ellipse 90% 60% at 50% 0%, #000 20%, transparent 78%);
+}
+img{display:block;max-width:100%}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+a{color:inherit;text-decoration:none}
+::selection{background:rgba(168,85,247,.42)}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.11);border-radius:99px;border:2px solid var(--bg)}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.2)}
+
+/* ============ HEADER ============ */
+header{
+  position:sticky;top:0;z-index:60;
+  backdrop-filter:blur(20px) saturate(150%);
+  -webkit-backdrop-filter:blur(20px) saturate(150%);
+  background:rgba(8,8,15,.72);
+  border-bottom:1px solid var(--border);
+}
+.header-inner{
+  max-width:1520px;margin:0 auto;
+  padding:14px 24px;
+  display:flex;align-items:center;justify-content:space-between;gap:18px;
+}
+.logo{display:flex;align-items:center;gap:11px;user-select:none}
+.logo-icon{
+  width:40px;height:40px;border-radius:13px;
+  display:grid;place-items:center;font-size:20px;
+  background:var(--grad);
+  box-shadow:0 8px 26px -8px rgba(168,85,247,.85);
+  animation:float 5s var(--ease) infinite;
+}
+@keyframes float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-4px) rotate(-4deg)}}
+.logo-text{font-size:19px;font-weight:800;letter-spacing:-.4px}
+.logo-text span{
+  background:var(--grad);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.header-actions{display:flex;align-items:center;gap:10px}
+
+.icon-btn{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:9px 15px;border-radius:12px;
+  background:var(--panel);border:1px solid var(--border);
+  font-size:13.5px;font-weight:600;color:var(--muted);
+  transition:all .22s var(--ease);
+}
+.icon-btn:hover{background:var(--panel-2);border-color:var(--border-2);color:var(--text);transform:translateY(-1px)}
+.icon-btn.active{
+  background:linear-gradient(135deg,rgba(255,107,166,.22),rgba(168,85,247,.22));
+  border-color:rgba(255,107,166,.5);
+  color:#ffc4dd;
+}
+.icon-btn .count{
+  min-width:20px;padding:1px 6px;border-radius:99px;
+  background:var(--grad);color:#fff;font-size:11px;font-weight:800;
+  line-height:16px;text-align:center;
+}
+
+/* ============ HERO ============ */
+.hero{
+  max-width:1520px;margin:0 auto;
+  padding:64px 24px 30px;
+  text-align:center;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 15px;border-radius:99px;margin-bottom:22px;
+  background:var(--panel);border:1px solid var(--border);
+  font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:.2px;
+}
+.hero-badge .dot{
+  width:7px;height:7px;border-radius:50%;background:#34d399;
+  box-shadow:0 0 0 0 rgba(52,211,153,.6);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(52,211,153,.6)}
+  70%{box-shadow:0 0 0 9px rgba(52,211,153,0)}
+  100%{box-shadow:0 0 0 0 rgba(52,211,153,0)}
+}
+.hero h1{
+  font-size:clamp(30px,5.4vw,54px);
+  font-weight:900;letter-spacing:-1.6px;line-height:1.1;
+  margin-bottom:16px;
+}
+.hero h1 .grad{
+  background:var(--grad);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.hero p{
+  color:var(--muted);font-size:clamp(14px,1.7vw,16.5px);
+  max-width:600px;margin:0 auto;line-height:1.65;
+}
+
+/* ============ CATEGORIES ============ */
+.cat-wrap{
+  position:sticky;top:69px;z-index:50;
+  backdrop-filter:blur(20px) saturate(150%);
+  -webkit-backdrop-filter:blur(20px) saturate(150%);
+  background:rgba(8,8,15,.7);
+  border-bottom:1px solid var(--border);
+}
+.cat-scroll{
+  max-width:1520px;margin:0 auto;
+  padding:13px 24px;
+  display:flex;gap:9px;overflow-x:auto;
+  scrollbar-width:none;-ms-overflow-style:none;
+  scroll-behavior:smooth;
+}
+.cat-scroll::-webkit-scrollbar{display:none}
+.chip{
+  flex:0 0 auto;
+  padding:8px 16px;border-radius:99px;
+  background:var(--panel);border:1px solid var(--border);
+  font-size:13.5px;font-weight:600;color:var(--muted);
+  white-space:nowrap;
+  transition:all .22s var(--ease);
+}
+.chip:hover{background:var(--panel-2);border-color:var(--border-2);color:var(--text);transform:translateY(-1px)}
+.chip.active{
+  background:var(--grad);color:#fff;border-color:transparent;
+  box-shadow:0 8px 24px -8px rgba(168,85,247,.9);
+  transform:translateY(-1px);
+}
+
+/* ============ TOOLBAR ============ */
+.toolbar{
+  max-width:1520px;margin:0 auto;
+  padding:26px 24px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:16px;flex-wrap:wrap;
+}
+.result-info{font-size:13.5px;color:var(--muted);font-weight:500}
+.result-info b{color:var(--text);font-weight:700}
+.result-info .hl{
+  background:var(--grad);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+  font-weight:800;
+}
+.search-box{
+  position:relative;flex:0 1 320px;min-width:200px;
+}
+.search-box input{
+  width:100%;padding:10px 14px 10px 38px;
+  border-radius:12px;
+  background:var(--panel);border:1px solid var(--border);
+  color:var(--text);font-size:13.5px;outline:none;
+  transition:all .22s var(--ease);
+}
+.search-box input::placeholder{color:#5f5f78}
+.search-box input:focus{
+  border-color:rgba(168,85,247,.6);
+  background:var(--panel-2);
+  box-shadow:0 0 0 4px rgba(168,85,247,.13);
+}
+.search-box svg{
+  position:absolute;left:13px;top:50%;transform:translateY(-50%);
+  width:15px;height:15px;stroke:#5f5f78;fill:none;stroke-width:2.2;
+  stroke-linecap:round;pointer-events:none;
+}
+
+/* ============ GALLERY (Masonry) ============ */
+main{max-width:1520px;margin:0 auto;padding:0 24px 90px}
+.gallery{columns:5 232px;column-gap:16px}
+
+.card{
+  position:relative;
+  break-inside:avoid;
+  margin-bottom:16px;
+  border-radius:var(--radius);
+  overflow:hidden;
+  background:linear-gradient(135deg,rgba(255,255,255,.055),rgba(255,255,255,.02));
+  border:1px solid var(--border);
+  cursor:zoom-in;
+  opacity:0;
+  transform:translateY(18px) scale(.97);
+  animation:cardIn .55s var(--ease) forwards;
+  transition:border-color .25s var(--ease), box-shadow .25s var(--ease), transform .25s var(--ease);
+}
+@keyframes cardIn{to{opacity:1;transform:translateY(0) scale(1)}}
+.card:hover{
+  border-color:rgba(168,85,247,.5);
+  box-shadow:0 22px 50px -18px rgba(168,85,247,.55);
+  transform:translateY(-3px);
+}
+.card img{
+  width:100%;height:auto;display:block;
+  transition:transform .55s var(--ease), opacity .4s ease;
+  opacity:0;
+  background:linear-gradient(110deg,rgba(255,255,255,.05) 8%,rgba(255,255,255,.1) 18%,rgba(255,255,255,.05) 33%);
+  background-size:220% 100%;
+  animation:shimmer 1.4s linear infinite;
+}
+.card img.loaded{opacity:1;animation:none;background:none}
+.card:hover img{transform:scale(1.055)}
+
+@keyframes shimmer{to{background-position:-220% 0}}
+
+.card-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(8,8,15,.92) 0%,rgba(8,8,15,.35) 32%,transparent 58%);
+  opacity:0;transition:opacity .3s var(--ease);
+  display:flex;flex-direction:column;justify-content:space-between;
+  padding:12px;
+}
+.card:hover .card-overlay{opacity:1}
+
+.card-top{display:flex;justify-content:flex-end}
+.card-actions{display:flex;gap:7px}
+.act-btn{
+  width:34px;height:34px;border-radius:10px;
+  display:grid;place-items:center;
+  background:rgba(8,8,15,.6);
+  border:1px solid rgba(255,255,255,.14);
+  backdrop-filter:blur(9px);
+  transition:all .2s var(--ease);
+  font-size:14px;line-height:1;
+}
+.act-btn:hover{background:rgba(255,255,255,.16);transform:scale(1.09)}
+.act-btn.fav.on{background:linear-gradient(135deg,#ff6ba6,#a855f7);border-color:transparent}
+.act-btn svg{width:15px;height:15px}
+
+.card-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.cat-badge{
+  padding:4px 10px;border-radius:99px;
+  background:rgba(8,8,15,.62);
+  border:1px solid rgba(255,255,255,.14);
+  backdrop-filter:blur(9px);
+  font-size:10.5px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.6px;
+  color:#d9d9ea;
+}
+
+/* Skeleton */
+.skeleton{
+  break-inside:avoid;margin-bottom:16px;border-radius:var(--radius);
+  background:linear-gradient(110deg,rgba(255,255,255,.04) 8%,rgba(255,255,255,.09) 18%,rgba(255,255,255,.04) 33%);
+  background-size:220% 100%;
+  animation:shimmer 1.4s linear infinite;
+  border:1px solid var(--border);
+}
+
+/* ============ LOADER / STATES ============ */
+.state{
+  grid-column:1/-1;
+  text-align:center;padding:64px 20px;color:var(--muted);
+}
+.state .emoji{font-size:44px;margin-bottom:16px;display:block;opacity:.85}
+.state h3{color:var(--text);font-size:17px;font-weight:700;margin-bottom:7px}
+.state p{font-size:14px;line-height:1.6;max-width:380px;margin:0 auto}
+
+.load-more-wrap{display:flex;justify-content:center;padding:34px 0 0}
+.btn-load{
+  padding:13px 34px;border-radius:99px;
+  background:var(--grad);color:#fff;
+  font-size:14px;font-weight:700;letter-spacing:.2px;
+  box-shadow:0 14px 34px -12px rgba(168,85,247,.9);
+  transition:all .24s var(--ease);
+  display:inline-flex;align-items:center;gap:9px;
+}
+.btn-load:hover{transform:translateY(-2px);box-shadow:0 20px 42px -12px rgba(168,85,247,1)}
+.btn-load:active{transform:translateY(0) scale(.98)}
+.btn-load:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.spinner{
+  width:15px;height:15px;border-radius:50%;
+  border:2px solid rgba(255,255,255,.32);
+  border-top-color:#fff;
+  animation:spin .7s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ============ LIGHTBOX ============ */
+.lightbox{
+  position:fixed;inset:0;z-index:200;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(4,4,9,.9);
+  backdrop-filter:blur(24px) saturate(140%);
+  -webkit-backdrop-filter:blur(24px) saturate(140%);
+  opacity:0;visibility:hidden;
+  transition:opacity .3s var(--ease), visibility .3s;
+  padding:22px;
+}
+.lightbox.open{opacity:1;visibility:visible}
+
+.lb-stage{
+  position:relative;
+  max-width:min(1160px,94vw);
+  max-height:88vh;
+  display:flex;flex-direction:column;align-items:center;
+  transform:scale(.94);
+  transition:transform .34s var(--ease);
+}
+.lightbox.open .lb-stage{transform:scale(1)}
+.lb-stage img{
+  max-width:100%;max-height:74vh;
+  object-fit:contain;
+  border-radius:16px;
+  box-shadow:0 40px 90px -30px rgba(0,0,0,.95), 0 0 0 1px rgba(255,255,255,.09);
+  background:rgba(255,255,255,.03);
+}
+.lb-meta{
+  margin-top:16px;width:100%;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:16px;flex-wrap:wrap;
+}
+.lb-info{display:flex;flex-direction:column;gap:3px;min-width:0}
+.lb-title{
+  font-size:14px;font-weight:700;color:var(--text);
+  display:flex;align-items:center;gap:8px;
+}
+.lb-sub{font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:56vw}
+.lb-sub a{color:#c4a6ff;text-decoration:underline;text-underline-offset:3px}
+.lb-sub a:hover{color:#e0d0ff}
+.lb-controls{display:flex;align-items:center;gap:8px}
+
+.lb-btn{
+  width:40px;height:40px;border-radius:12px;
+  display:grid;place-items:center;
+  background:var(--panel-2);border:1px solid var(--border-2);
+  transition:all .2s var(--ease);
+}
+.lb-btn:hover{background:rgba(255,255,255,.16);transform:translateY(-1px)}
+.lb-btn:disabled{opacity:.32;cursor:not-allowed;transform:none}
+.lb-btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
+.lb-btn.fav.on{background:linear-gradient(135deg,#ff6ba6,#a855f7);border-color:transparent;color:#fff}
+
+.lb-counter{
+  padding:0 13px;height:40px;border-radius:12px;
+  display:grid;place-items:center;
+  background:var(--panel-2);border:1px solid var(--border-2);
+  font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;
+  color:var(--muted);min-width:74px;
+}
+
+.lb-close{
+  position:absolute;top:20px;right:22px;
+  width:44px;height:44px;border-radius:14px;
+  display:grid;place-items:center;
+  background:var(--panel-2);border:1px solid var(--border-2);
+  transition:all .2s var(--ease);z-index:5;
+}
+.lb-close:hover{background:rgba(255,90,120,.25);border-color:rgba(255,90,120,.5);transform:rotate(90deg)}
+.lb-close svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:2.3;stroke-linecap:round}
+
+.lb-nav{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:52px;height:52px;border-radius:50%;
+  display:grid;place-items:center;
+  background:rgba(8,8,15,.66);
+  border:1px solid var(--border-2);
+  backdrop-filter:blur(12px);
+  transition:all .22s var(--ease);z-index:5;
+}
+.lb-nav:hover{background:rgba(255,255,255,.16);transform:translateY(-50%) scale(1.08)}
+.lb-nav.prev{left:22px}
+.lb-nav.next{right:22px}
+.lb-nav:disabled{opacity:.2;cursor:not-allowed}
+.lb-nav svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ============ TOAST ============ */
+.toast{
+  position:fixed;bottom:28px;left:50%;
+  transform:translate(-50%,140%);
+  padding:13px 22px;border-radius:14px;
+  background:rgba(20,20,32,.94);
+  border:1px solid var(--border-2);
+  backdrop-filter:blur(18px);
+  box-shadow:var(--shadow);
+  font-size:13.5px;font-weight:600;
+  display:flex;align-items:center;gap:10px;
+  z-index:300;pointer-events:none;
+  transition:transform .42s var(--ease), opacity .3s;
+  opacity:0;
+  max-width:88vw;
+}
+.toast.show{transform:translate(-50%,0);opacity:1}
+.toast .tdot{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
+.toast.ok .tdot{background:#34d399;box-shadow:0 0 12px #34d399}
+.toast.err .tdot{background:#f87171;box-shadow:0 0 12px #f87171}
+.toast.info .tdot{background:#818cf8;box-shadow:0 0 12px #818cf8}
+
+/* ============ BACK TO TOP ============ */
+.to-top{
+  position:fixed;right:26px;bottom:26px;z-index:70;
+  width:46px;height:46px;border-radius:14px;
+  display:grid;place-items:center;
+  background:var(--grad);
+  box-shadow:0 14px 34px -10px rgba(168,85,247,.9);
+  opacity:0;visibility:hidden;transform:translateY(16px);
+  transition:all .3s var(--ease);
+}
+.to-top.show{opacity:1;visibility:visible;transform:translateY(0)}
+.to-top:hover{transform:translateY(-3px)}
+.to-top svg{width:19px;height:19px;stroke:#fff;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+
+/* ============ FOOTER ============ */
+footer{
+  border-top:1px solid var(--border);
+  padding:34px 24px;
+  text-align:center;
+  color:var(--muted);font-size:13px;line-height:1.75;
+}
+footer b{
+  background:var(--grad);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;font-weight:800;
+}
+footer .srcs{margin-top:8px;font-size:12px;opacity:.75}
+footer .srcs a{color:#a78bfa;text-decoration:underline;text-underline-offset:3px}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width:1200px){ .gallery{columns:4 210px} }
+@media (max-width:900px){
+  .gallery{columns:3 190px}
+  .hero{padding:46px 20px 24px}
+  .lb-nav{width:44px;height:44px}
+  .lb-nav.prev{left:10px}
+  .lb-nav.next{right:10px}
+}
+@media (max-width:640px){
+  .header-inner{padding:12px 16px}
+  .logo-text{font-size:17px}
+  .logo-icon{width:36px;height:36px;font-size:18px}
+  .hero{padding:36px 16px 18px}
+  .cat-scroll{padding:11px 16px}
+  .toolbar{padding:20px 16px 12px}
+  main{padding:0 16px 70px}
+  .gallery{columns:2 150px;column-gap:12px}
+  .card{margin-bottom:12px;border-radius:14px}
+  .lb-sub{max-width:70vw}
+  .lb-stage img{max-height:62vh}
+  .icon-btn{padding:8px 12px;font-size:12.5px}
+  .search-box{flex:1 1 100%}
+  .to-top{right:16px;bottom:16px}
+}
+@media (max-width:380px){ .gallery{columns:2 130px} }
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">🌸</div>
+      <div class="logo-text">Ani<span>Gallery</span></div>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" id="favBtn" title="Bộ sưu tập yêu thích">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+        Yêu thích
+        <span class="count" id="favCount">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="hero-badge">
+    <span class="dot"></span>
+    Đang kết nối API trực tiếp · Cập nhật liên tục
+  </div>
+  <h1>Thư viện ảnh <span class="grad">Anime</span><br/>đẹp không giới hạn</h1>
+  <p>Khám phá hàng nghìn hình ảnh anime chất lượng cao — waifu, neko, husbando và nhiều thể loại khác, hoàn toàn miễn phí.</p>
+</section>
+
+<!-- ================= CATEGORIES ================= -->
+<div class="cat-wrap">
+  <div class="cat-scroll" id="catScroll"></div>
+</div>
+
+<!-- ================= TOOLBAR ================= -->
+<div class="toolbar">
+  <div class="result-info" id="resultInfo">
+    Sẵn sàng tải ảnh <span class="hl">✨</span>
+  </div>
+  <div class="search-box">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    <input type="text" id="searchInput" placeholder="Tìm thể loại... (vd: neko, hug)" autocomplete="off" />
+  </div>
+</div>
+
+<!-- ================= GALLERY ================= -->
+<main>
+  <div class="gallery" id="gallery"></div>
+  <div class="load-more-wrap" id="loadWrap" style="display:none">
+    <button class="btn-load" id="loadBtn">
+      <span id="loadBtnText">Tải thêm ảnh</span>
+    </button>
+  </div>
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div>Made with 💜 by <b>AniGallery</b></div>
+  <div class="srcs">
+    Nguồn ảnh:
+    <a href="https://nekos.best" target="_blank" rel="noopener">nekos.best</a> ·
+    <a href="https://waifu.pics" target="_blank" rel="noopener">waifu.pics</a>
+  </div>
+</footer>
+
+<!-- ================= LIGHTBOX ================= -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" id="lbClose" aria-label="Đóng">
+    <svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
+  </button>
+  <button class="lb-nav prev" id="lbPrev" aria-label="Trước">
+    <svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+  </button>
+  <button class="lb-nav next" id="lbNext" aria-label="Sau">
+    <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+  </button>
+
+  <div class="lb-stage">
+    <img id="lbImg" src="" alt="Anime artwork" />
+    <div class="lb-meta">
+      <div class="lb-info">
+        <div class="lb-title" id="lbTitle">Ảnh anime</div>
+        <div class="lb-sub" id="lbSub"></div>
+      </div>
+      <div class="lb-controls">
+        <span class="lb-counter" id="lbCounter">0 / 0</span>
+        <button class="lb-btn fav" id="lbFav" title="Yêu thích">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+        </button>
+        <button class="lb-btn" id="lbDownload" title="Tải xuống">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+        </button>
+        <button class="lb-btn" id="lbSource" title="Mở nguồn gốc">
+          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6M10 14 21 3"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= TOAST ================= -->
+<div class="toast" id="toast"><span class="tdot"></span><span id="toastMsg"></span></div>
+
+<!-- ================= BACK TO TOP ================= -->
+<button class="to-top" id="toTop" aria-label="Lên đầu trang">
+  <svg viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg>
+</button>
+
+<script>
+(() => {
+"use strict";
+
+/* ============================================================
+   CẤU HÌNH
+   ============================================================ */
+const PAGE_SIZE = 20;           // số ảnh mỗi lần tải
+const NEKOS_API = "https://nekos.best/api/v2";
+const WAIFU_API = "https://api.waifu.pics/sfw";
+const FAV_KEY   = "anigallery:favorites:v1";
+
+/* Danh mục: type = "nekos" | "waifupics" | "mixed" */
+const CATEGORIES = [
+  { id:"all",      label:"✨ Tất cả",     type:"mixed"     },
+  { id:"waifu",    label:"👧 Waifu",      type:"nekos"     },
+  { id:"neko",     label:"🐱 Neko",       type:"nekos"     },
+  { id:"husbando", label:"🤵 Husbando",   type:"nekos"     },
+  { id:"kitsune",  label:"🦊 Kitsune",    type:"nekos"     },
+  { id:"shinobu",  label:"🦋 Shinobu",    type:"waifupics" },
+  { id:"megumin",  label:"💥 Megumin",    type:"waifupics" },
+  { id:"cuddle",   label:"🤗 Cuddle",     type:"waifupics" },
+  { id:"hug",      label:"🫂 Hug",        type:"waifupics" },
+  { id:"kiss",     label:"💋 Kiss",       type:"waifupics" },
+  { id:"pat",      label:"🖐️ Pat",        type:"waifupics" },
+  { id:"smug",     label:"😏 Smug",       type:"waifupics" },
+  { id:"blush",    label:"😊 Blush",      type:"waifupics" },
+  { id:"dance",    label:"💃 Dance",      type:"waifupics" },
+  { id:"happy",    label:"😄 Happy",      type:"waifupics" },
+  { id:"wink",     label:"😉 Wink",       type:"waifupics" },
+  { id:"handhold", label:"🤝 Handhold",   type:"waifupics" },
+  { id:"highfive", label:"🙌 Highfive",   type:"waifupics" },
+  { id:"wave",     label:"👋 Wave",       type:"waifupics" },
+];
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let currentCat   = "all";
+let images       = [];         // ảnh đang hiển thị
+let seenUrls     = new Set();  // chống trùng
+let loading      = false;
+let favOnly      = false;
+let favorites    = loadFavorites();
+let lbIndex      = 0;
+
+/* ============================================================
+   DOM
+   ============================================================ */
+const $ = (s) => document.querySelector(s);
+const gallery     = $("#gallery");
+const catScroll   = $("#catScroll");
+const searchInput = $("#searchInput");
+const resultInfo  = $("#resultInfo");
+const loadWrap    = $("#loadWrap");
+const loadBtn     = $("#loadBtn");
+const loadBtnText = $("#loadBtnText");
+const favBtn      = $("#favBtn");
+const favCount    = $("#favCount");
+const lightbox    = $("#lightbox");
+const lbImg       = $("#lbImg");
+const lbTitle     = $("#lbTitle");
+const lbSub       = $("#lbSub");
+const lbCounter   = $("#lbCounter");
+const lbPrev      = $("#lbPrev");
+const lbNext      = $("#lbNext");
+const lbClose     = $("#lbClose");
+const lbFav       = $("#lbFav");
+const lbDownload  = $("#lbDownload");
+const lbSource    = $("#lbSource");
+const toastEl     = $("#toast");
+const toastMsg    = $("#toastMsg");
+const toTop       = $("#toTop");
+
+/* ============================================================
+   TIỆN ÍCH
+   ============================================================ */
+const shuffle = (arr) => {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+};
+
+const extractExt = (url) => {
+  try {
+    const path = new URL(url).pathname;
+    const m = path.match(/\.(png|jpe?g|gif|webp|avif)$/i);
+    return m ? m[1].toLowerCase() : "png";
+  } catch { return "png"; }
+};
+
+let toastTimer;
+function toast(msg, type = "info", duration = 2600) {
+  clearTimeout(toastTimer);
+  toastMsg.textContent = msg;
+  toastEl.className = "toast " + type;
+  requestAnimationFrame(() => toastEl.classList.add("show"));
+  toastTimer = setTimeout(() => toastEl.classList.remove("show"), duration);
+}
+
+/* ============================================================
+   FAVORITES
+   ============================================================ */
+function loadFavorites() {
+  try {
+    const raw = localStorage.getItem(FAV_KEY);
+    const arr = raw ? JSON.parse(raw) : [];
+    return Array.isArray(arr) ? arr : [];
+  } catch { return []; }
+}
+function saveFavorites() {
+  try { localStorage.setItem(FAV_KEY, JSON.stringify(favorites)); } catch {}
+}
+function isFav(url) {
+  return favorites.some((f) => f.url === url);
+}
+function toggleFav(item) {
+  const idx = favorites.findIndex((f) => f.url === item.url);
+  if (idx >= 0) {
+    favorites.splice(idx, 1);
+    toast("Đã xoá khỏi yêu thích", "info");
+  } else {
+    favorites.unshift({
+      url: item.url,
+      cat: item.cat || "",
+      source: item.source || "",
+      artist: item.artist || "",
+      artistUrl: item.artistUrl || "",
+    });
+    toast("Đã thêm vào yêu thích 💜", "ok");
+  }
+  saveFavorites();
+  updateFavUI();
+}
+function updateFavUI() {
+  favCount.textContent = favorites.length;
+  document.querySelectorAll(".act-btn.fav").forEach((btn) => {
+    const url = btn.dataset.url;
+    btn.classList.toggle("on", isFav(url));
+  });
+  if (lightbox.classList.contains("open") && images[lbIndex]) {
+    lbFav.classList.toggle("on", isFav(images[lbIndex].url));
+  }
+}
+
+/* ============================================================
+   API FETCHERS
+   ============================================================ */
+async function fetchNekos(cat, amount) {
+  const n = Math.max(1, Math.min(amount, 20));
+  const res = await fetch(`${NEKOS_API}/${cat}?amount=${n}`);
+  if (!res.ok) throw new Error(`nekos.best ${res.status}`);
+  const data = await res.json();
+  return (data.results || []).map((r) => ({
+    url: r.url,
+    cat,
+    source: r.source_url || "",
+    artist: r.artist_name || "",
+    artistUrl: r.artist_href || "",
+  }));
+}
+
+async function fetchWaifuPics(cat, amount) {
+  const n = Math.max(1, Math.min(amount, 30));
+  const jobs = Array.from({ length: n }, () =>
+    fetch(`${WAIFU_API}/${cat}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .catch(() => null)
+  );
+  const out = await Promise.all(jobs);
+  return out
+    .filter((x) => x && typeof x.url === "string")
+    .map((x) => ({ url: x.url, cat, source: "", artist: "", artistUrl: "" }));
+}
+
+async function fetchMixed(amount) {
+  const pool = ["neko", "waifu", "kitsune", "shinobu", "megumin", "awoo"];
+  const picks = shuffle(pool).slice(0, 3);
+  const per = Math.ceil(amount / picks.length);
+
+  const parts = await Promise.all(
+    picks.map((id) => {
+      const cfg = CATEGORIES.find((c) => c.id === id);
+      if (!cfg) return Promise.resolve([]);
+      return cfg.type === "nekos"
+        ? fetchNekos(id, per).catch(() => [])
+        : fetchWaifuPics(id, per).catch(() => []);
+    })
+  );
+  return shuffle(parts.flat());
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+function buildCategoryChips() {
+  catScroll.innerHTML = "";
+  CATEGORIES.forEach((c) => {
+    const btn = document.createElement("button");
+    btn.className = "chip" + (c.id === currentCat ? " active" : "");
+    btn.textContent = c.label;
+    btn.dataset.cat = c.id;
+    btn.addEventListener("click", () => selectCategory(c.id));
+    catScroll.appendChild(btn);
+  });
+}
+
+function setActiveChip(id) {
+  catScroll.querySelectorAll(".chip").forEach((b) =>
+    b.classList.toggle("active", b.dataset.cat === id)
+  );
+}
+
+function selectCategory(id) {
+  if (currentCat === id && !favOnly) return;
+  currentCat = id;
+  favOnly = false;
+  favBtn.classList.remove("active");
+  setActiveChip(id);
+  resetGallery();
+  loadMore();
+}
+
+function resetGallery() {
+  images = [];
+  seenUrls = new Set();
+  gallery.innerHTML = "";
+  loadWrap.style.display = "none";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function showSkeletons(count) {
+  const heights = [230, 300, 260, 340, 210, 290];
+  for (let i = 0; i < count; i++) {
+    const sk = document.createElement("div");
+    sk.className = "skeleton";
+    sk.style.height = heights[i % heights.length] + "px";
+    gallery.appendChild(sk);
+  }
+}
+function clearSkeletons() {
+  gallery.querySelectorAll(".skeleton").forEach((s) => s.remove());
+}
+
+function createCard(item, delay) {
+  const card = document.createElement("div");
+  card.className = "card";
+  card.style.animationDelay = Math.min(delay, 500) + "ms";
+  card.dataset.url = item.url;
+
+  const img = document.createElement("img");
+  img.loading = "lazy";
+  img.decoding = "async";
+  img.alt = `Anime ${item.cat || ""}`.trim();
+  img.src = item.url;
+
+  img.addEventListener("load", () => img.classList.add("loaded"), { once: true });
+  img.addEventListener("error", () => {
+    card.style.display = "none";
+  }, { once: true });
+
+  const overlay = document.createElement("div");
+  overlay.className = "card-overlay";
+  overlay.innerHTML = `
+    <div class="card-top">
+      <div class="card-actions">
+        <button class="act-btn fav" title="Yêu thích" data-url="${escapeAttr(item.url)}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+        </button>
+        <button class="act-btn dl" title="Tải xuống">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="card-bottom">
+      <span class="cat-badge">${escapeHtml(item.cat || "anime")}</span>
+    </div>
+  `;
+
+  card.appendChild(img);
+  card.appendChild(overlay);
+
+  /* Click mở lightbox */
+  card.addEventListener("click", (e) => {
+    if (e.target.closest(".act-btn")) return;
+    const idx = images.findIndex((x) => x.url === item.url);
+    openLightbox(idx >= 0 ? idx : 0);
+  });
+
+  /* Nút yêu thích */
+  const favButton = overlay.querySelector(".act-btn.fav");
+  favButton.addEventListener("click", (e) => {
+    e.stopPropagation();
+    toggleFav(item);
+  });
+
+  /* Nút tải xuống */
+  const dlButton = overlay.querySelector(".act-btn.dl");
+  dlButton.addEventListener("click", (e) => {
+    e.stopPropagation();
+    downloadImage(item.url, `anigallery-${item.cat || "anime"}-${Date.now()}.${extractExt(item.url)}`);
+  });
+
+  return card;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, (m) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m])
+  );
+}
+function escapeAttr(s) { return escapeHtml(s); }
+
+function appendImages(list) {
+  if (!list.length) return;
+  const frag = document.createDocumentFragment();
+  list.forEach((item, i) => frag.appendChild(createCard(item, i * 32)));
+  gallery.appendChild(frag);
+  updateFavUI();
+}
+
+function updateResultInfo() {
+  const total = images.length;
+  const name = CATEGORIES.find((c) => c.id === currentCat)?.label || "Tất cả";
+  if (favOnly) {
+    resultInfo.innerHTML = `Đang xem <span class="hl">${total}</span> ảnh yêu thích`;
+  } else {
+    resultInfo.innerHTML = `<span class="hl">${name}</span> · Đã tải <b>${total}</b> ảnh`;
+  }
+}
+
+/* ============================================================
+   LOAD MORE
+   ============================================================ */
+async function loadMore() {
+  if (loading) return;
+  loading = true;
+  loadBtn.disabled = true;
+  loadBtnText.textContent = "Đang tải...";
+  const spinner = document.createElement("span");
+  spinner.className = "spinner";
+  loadBtn.prepend(spinner);
+
+  showSkeletons(Math.min(PAGE_SIZE, 8));
+
+  try {
+    let fetched = [];
+    if (currentCat === "all") {
+      fetched = await fetchMixed(PAGE_SIZE);
+    } else {
+      const cfg = CATEGORIES.find((c) => c.id === currentCat);
+      fetched =
+        cfg.type === "nekos"
+          ? await fetchNekos(cfg.id, PAGE_SIZE)
+          : await fetchWaifuPics(cfg.id, PAGE_SIZE);
+    }
+
+    const fresh = fetched.filter((x) => x.url && !seenUrls.has(x.url));
+    fresh.forEach((x) => seenUrls.add(x.url));
+
+    images.push(...fresh);
+    clearSkeletons();
+    appendImages(fresh);
+    updateResultInfo();
+
+    if (!fresh.length && !images.length) {
+      renderEmpty("Không tìm thấy ảnh", "Hãy thử chọn thể loại khác nhé!");
+      loadWrap.style.display = "none";
+    } else {
+      loadWrap.style.display = "flex";
+    }
+  } catch (err) {
+    console.error(err);
+    clearSkeletons();
+    if (!images.length) {
+      renderEmpty("Không thể kết nối", "Kiểm tra kết nối mạng của bạn rồi thử lại.");
+    } else {
+      toast("Lỗi tải ảnh, vui lòng thử lại", "err");
+    }
+  } finally {
+    loading = false;
+    spinner.remove();
+    loadBtn.disabled = false;
+    loadBtnText.textContent = "Tải thêm ảnh";
+  }
+}
+
+function renderEmpty(title, desc) {
+  gallery.innerHTML = `
+    <div class="state">
+      <span class="emoji">🍃</span>
+      <h3>${escapeHtml(title)}</h3>
+      <p>${escapeHtml(desc)}</p>
+    </div>`;
+}
+
+/* ============================================================
+   LIGHTBOX
+   ============================================================ */
+function openLightbox(index) {
+  if (!images.length) return;
+  lbIndex = Math.max(0, Math.min(index, images.length - 1));
+  renderLightbox();
+  lightbox.classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeLightbox() {
+  lightbox.classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+function renderLightbox() {
+  const item = images[lbIndex];
+  if (!item) return;
+
+  lbImg.style.opacity = "0";
+  const tmp = new Image();
+  tmp.onload = () => {
+    lbImg.src = item.url;
+    lbImg.style.transition = "opacity .28s ease";
+    lbImg.style.opacity = "1";
+  };
+  tmp.onerror = () => { lbImg.src = item.url; lbImg.style.opacity = "1"; };
+  tmp.src = item.url;
+
+  lbTitle.textContent = (item.cat ? item.cat.toUpperCase() : "ANIME") + " artwork";
+
+  const parts = [];
+  if (item.artist) {
+    parts.push(
+      item.artistUrl
+        ? `Nghệ sĩ: <a href="${escapeAttr(item.artistUrl)}" target="_blank" rel="noopener">${escapeHtml(item.artist)}</a>`
+        : `Nghệ sĩ: ${escapeHtml(item.artist)}`
+    );
+  }
+  if (item.source) {
+    parts.push(`<a href="${escapeAttr(item.source)}" target="_blank" rel="noopener">Nguồn gốc ↗</a>`);
+  }
+  lbSub.innerHTML = parts.length ? parts.join(" · ") : "Nguồn: waifu.pics";
+
+  lbCounter.textContent = `${lbIndex + 1} / ${images.length}`;
+  lbPrev.disabled = lbIndex === 0;
+  lbNext.disabled = lbIndex === images.length - 1;
+  lbFav.classList.toggle("on", isFav(item.url));
+  lbSource.style.display = item.source ? "grid" : "none";
+}
+
+function nextImage() {
+  if (lbIndex < images.length - 1) { lbIndex++; renderLightbox(); }
+}
+function prevImage() {
+  if (lbIndex > 0) { lbIndex--; renderLightbox(); }
+}
+
+/* ============================================================
+   DOWNLOAD
+   ============================================================ */
+async function downloadImage(url, filename) {
+  toast("Đang tải ảnh...", "info", 1600);
+  try {
+    const res = await fetch(url, { mode: "cors" });
+    if (!res.ok) throw new Error("bad response");
+    const blob = await res.blob();
+    const objectUrl = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = objectUrl;
+    a.download = filename || `anime.${extractExt(url)}`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(objectUrl), 4000);
+    toast("Đã tải ảnh về máy ✓", "ok");
+  } catch {
+    window.open(url, "_blank", "noopener");
+    toast("Đã mở ảnh trong tab mới", "info");
+  }
+}
+
+/* ============================================================
+   SEARCH (lọc chip thể loại)
+   ============================================================ */
+searchInput.addEventListener("input", (e) => {
+  const q = e.target.value.trim().toLowerCase();
+  let visible = 0;
+  catScroll.querySelectorAll(".chip").forEach((chip) => {
+    const id = chip.dataset.cat;
+    const cfg = CATEGORIES.find((c) => c.id === id);
+    const match = !q || id.includes(q) || (cfg && cfg.label.toLowerCase().includes(q));
+    chip.style.display = match ? "" : "none";
+    if (match) visible++;
+  });
+  if (!visible && q) {
+    // Không có thể loại khớp — hiện lại tất cả
+    catScroll.querySelectorAll(".chip").forEach((c) => (c.style.display = ""));
+  }
+});
+
+/* ============================================================
+   EVENTS
+   ============================================================ */
+loadBtn.addEventListener("click", loadMore);
+
+favBtn.addEventListener("click", () => {
+  favOnly = !favOnly;
+  favBtn.classList.toggle("active", favOnly);
+  gallery.innerHTML = "";
+  loadWrap.style.display = "none";
+
+  if (favOnly) {
+    images = favorites.map((f) => ({
+      url: f.url, cat: f.cat || "favorite",
+      source: f.source || "", artist: f.artist || "", artistUrl: f.artistUrl || "",
+    }));
+    if (!images.length) {
+      renderEmpty("Chưa có ảnh yêu thích", "Nhấn vào trái tim trên mỗi ảnh để lưu vào bộ sưu tập nhé!");
+    } else {
+      appendImages(images);
+      loadWrap.style.display = "none";
+    }
+    updateResultInfo();
+  } else {
+    resetGallery();
+    loadMore();
+  }
+});
+
+lbClose.addEventListener("click", closeLightbox);
+lbPrev.addEventListener("click", prevImage);
+lbNext.addEventListener("click", nextImage);
+
+lightbox.addEventListener("click", (e) => {
+  if (e.target === lightbox) closeLightbox();
+});
+
+lbFav.addEventListener("click", () => {
+  const item = images[lbIndex];
+  if (item) toggleFav(item);
+});
+
+lbDownload.addEventListener("click", () => {
+  const item = images[lbIndex];
+  if (item) downloadImage(item.url, `anigallery-${item.cat || "anime"}-${Date.now()}.${extractExt(item.url)}`);
+});
+
+lbSource.addEventListener("click", () => {
+  const item = images[lbIndex];
+  if (item?.source) window.open(item.source, "_blank", "noopener");
+});
+
+document.addEventListener("keydown", (e) => {
+  if (!lightbox.classList.contains("open")) return;
+  if (e.key === "Escape") closeLightbox();
+  else if (e.key === "ArrowRight") nextImage();
+  else if (e.key === "ArrowLeft") prevImage();
+});
+
+/* Touch swipe trong lightbox */
+let touchStartX = 0;
+lbImg.addEventListener("touchstart", (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
+lbImg.addEventListener("touchend", (e) => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > 55) { dx < 0 ? nextImage() : prevImage(); }
+}, { passive: true });
+
+/* Back to top */
+window.addEventListener("scroll", () => {
+  toTop.classList.toggle("show", window.scrollY > 620);
+}, { passive: true });
+toTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+
+/* Infinite scroll nhẹ nhàng */
+const io = new IntersectionObserver((entries) => {
+  if (entries[0].isIntersecting && !loading && !favOnly && images.length > 0) {
+    loadMore();
+  }
+}, { rootMargin: "600px 0px" });
+io.observe(loadWrap);
+
+/* ============================================================
+   INIT
+   ============================================================ */
+function init() {
+  buildCategoryChips();
+  updateFavUI();
+  showSkeletons(10);
+  loadMore();
+}
+init();
+
+})();
+</script>
+</body>
+</html>
