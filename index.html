@@ -3,10 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>AniGallery · Thư viện ảnh Anime</title>
-<meta name="description" content="Thư viện ảnh anime chất lượng cao, cập nhật liên tục từ nhiều nguồn." />
-<link rel="preconnect" href="https://nekos.best" />
-<link rel="preconnect" href="https://api.waifu.pics" />
+<title>AniGallery · Thư viện Media Anime</title>
+<meta name="description" content="Thư viện ảnh, video, âm thanh anime — tải lên và lưu trữ ngay trên trình duyệt." />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>" />
 
 <style>
@@ -23,7 +21,11 @@
   --violet:#a855f7;
   --indigo:#6366f1;
   --cyan:#22d3ee;
+  --green:#34d399;
+  --amber:#fbbf24;
+  --red:#f87171;
   --grad:linear-gradient(135deg,#ff6ba6 0%,#a855f7 55%,#6366f1 100%);
+  --grad-soft:linear-gradient(135deg,rgba(255,107,166,.2),rgba(168,85,247,.2));
   --shadow:0 22px 60px -22px rgba(0,0,0,.9);
   --radius:18px;
   --ease:cubic-bezier(.22,1,.36,1);
@@ -57,12 +59,13 @@ body::after{
   mask-image:radial-gradient(ellipse 90% 60% at 50% 0%, #000 20%, transparent 78%);
   -webkit-mask-image:radial-gradient(ellipse 90% 60% at 50% 0%, #000 20%, transparent 78%);
 }
-img{display:block;max-width:100%}
+body.no-scroll{overflow:hidden}
+img,video,audio{display:block;max-width:100%}
 button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 a{color:inherit;text-decoration:none}
+input,textarea{font:inherit;color:inherit}
 ::selection{background:rgba(168,85,247,.42)}
 
-/* Scrollbar */
 ::-webkit-scrollbar{width:10px;height:10px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.11);border-radius:99px;border:2px solid var(--bg)}
@@ -73,15 +76,15 @@ header{
   position:sticky;top:0;z-index:60;
   backdrop-filter:blur(20px) saturate(150%);
   -webkit-backdrop-filter:blur(20px) saturate(150%);
-  background:rgba(8,8,15,.72);
+  background:rgba(8,8,15,.78);
   border-bottom:1px solid var(--border);
 }
 .header-inner{
-  max-width:1520px;margin:0 auto;
+  max-width:1580px;margin:0 auto;
   padding:14px 24px;
   display:flex;align-items:center;justify-content:space-between;gap:18px;
 }
-.logo{display:flex;align-items:center;gap:11px;user-select:none}
+.logo{display:flex;align-items:center;gap:11px;user-select:none;flex:0 0 auto}
 .logo-icon{
   width:40px;height:40px;border-radius:13px;
   display:grid;place-items:center;font-size:20px;
@@ -96,41 +99,62 @@ header{
   -webkit-background-clip:text;background-clip:text;
   -webkit-text-fill-color:transparent;
 }
-.header-actions{display:flex;align-items:center;gap:10px}
+
+/* Tabs */
+.tabs{
+  display:flex;gap:5px;
+  padding:4px;border-radius:14px;
+  background:var(--panel);border:1px solid var(--border);
+}
+.tab{
+  padding:8px 16px;border-radius:10px;
+  font-size:13.5px;font-weight:600;color:var(--muted);
+  transition:all .22s var(--ease);
+  display:flex;align-items:center;gap:7px;
+  white-space:nowrap;
+}
+.tab:hover{color:var(--text);background:var(--panel-2)}
+.tab.active{
+  background:var(--grad);color:#fff;
+  box-shadow:0 6px 18px -6px rgba(168,85,247,.9);
+}
+.tab .count{
+  min-width:18px;padding:1px 6px;border-radius:99px;
+  background:rgba(0,0,0,.25);font-size:11px;font-weight:800;line-height:16px;
+}
+.tab:not(.active) .count{background:var(--panel-2);color:var(--muted)}
+
+.header-actions{display:flex;align-items:center;gap:10px;flex:0 0 auto}
 
 .icon-btn{
   display:inline-flex;align-items:center;gap:7px;
   padding:9px 15px;border-radius:12px;
   background:var(--panel);border:1px solid var(--border);
-  font-size:13.5px;font-weight:600;color:var(--muted);
+  font-size:13.5px;font-weight:600;color:var(--text);
   transition:all .22s var(--ease);
 }
-.icon-btn:hover{background:var(--panel-2);border-color:var(--border-2);color:var(--text);transform:translateY(-1px)}
-.icon-btn.active{
-  background:linear-gradient(135deg,rgba(255,107,166,.22),rgba(168,85,247,.22));
-  border-color:rgba(255,107,166,.5);
-  color:#ffc4dd;
+.icon-btn:hover{background:var(--panel-2);border-color:var(--border-2);transform:translateY(-1px)}
+.icon-btn.primary{
+  background:var(--grad);border-color:transparent;color:#fff;
+  box-shadow:0 10px 24px -10px rgba(168,85,247,.9);
 }
-.icon-btn .count{
-  min-width:20px;padding:1px 6px;border-radius:99px;
-  background:var(--grad);color:#fff;font-size:11px;font-weight:800;
-  line-height:16px;text-align:center;
-}
+.icon-btn.primary:hover{box-shadow:0 14px 32px -10px rgba(168,85,247,1)}
+.icon-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 
 /* ============ HERO ============ */
 .hero{
-  max-width:1520px;margin:0 auto;
-  padding:64px 24px 30px;
+  max-width:1580px;margin:0 auto;
+  padding:48px 24px 24px;
   text-align:center;
 }
 .hero-badge{
   display:inline-flex;align-items:center;gap:8px;
-  padding:6px 15px;border-radius:99px;margin-bottom:22px;
+  padding:6px 15px;border-radius:99px;margin-bottom:20px;
   background:var(--panel);border:1px solid var(--border);
   font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:.2px;
 }
 .hero-badge .dot{
-  width:7px;height:7px;border-radius:50%;background:#34d399;
+  width:7px;height:7px;border-radius:50%;background:var(--green);
   box-shadow:0 0 0 0 rgba(52,211,153,.6);
   animation:pulse 2s infinite;
 }
@@ -140,9 +164,9 @@ header{
   100%{box-shadow:0 0 0 0 rgba(52,211,153,0)}
 }
 .hero h1{
-  font-size:clamp(30px,5.4vw,54px);
-  font-weight:900;letter-spacing:-1.6px;line-height:1.1;
-  margin-bottom:16px;
+  font-size:clamp(28px,5vw,50px);
+  font-weight:900;letter-spacing:-1.4px;line-height:1.1;
+  margin-bottom:14px;
 }
 .hero h1 .grad{
   background:var(--grad);
@@ -150,8 +174,23 @@ header{
   -webkit-text-fill-color:transparent;
 }
 .hero p{
-  color:var(--muted);font-size:clamp(14px,1.7vw,16.5px);
-  max-width:600px;margin:0 auto;line-height:1.65;
+  color:var(--muted);font-size:clamp(14px,1.6vw,16px);
+  max-width:620px;margin:0 auto;line-height:1.65;
+}
+.hero .stat-row{
+  display:flex;justify-content:center;gap:22px;margin-top:22px;flex-wrap:wrap;
+}
+.hero .stat{
+  display:flex;align-items:center;gap:8px;
+  font-size:13px;color:var(--muted);
+  padding:8px 14px;border-radius:12px;
+  background:var(--panel);border:1px solid var(--border);
+}
+.hero .stat b{
+  color:var(--text);font-weight:800;
+  background:var(--grad);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
 }
 
 /* ============ CATEGORIES ============ */
@@ -159,11 +198,11 @@ header{
   position:sticky;top:69px;z-index:50;
   backdrop-filter:blur(20px) saturate(150%);
   -webkit-backdrop-filter:blur(20px) saturate(150%);
-  background:rgba(8,8,15,.7);
+  background:rgba(8,8,15,.72);
   border-bottom:1px solid var(--border);
 }
 .cat-scroll{
-  max-width:1520px;margin:0 auto;
+  max-width:1580px;margin:0 auto;
   padding:13px 24px;
   display:flex;gap:9px;overflow-x:auto;
   scrollbar-width:none;-ms-overflow-style:none;
@@ -184,11 +223,15 @@ header{
   box-shadow:0 8px 24px -8px rgba(168,85,247,.9);
   transform:translateY(-1px);
 }
+.chip.filter-chip{
+  padding:7px 14px;font-size:12.5px;
+}
+.chip.filter-chip .ic{font-size:14px;margin-right:2px}
 
 /* ============ TOOLBAR ============ */
 .toolbar{
-  max-width:1520px;margin:0 auto;
-  padding:26px 24px 16px;
+  max-width:1580px;margin:0 auto;
+  padding:24px 24px 16px;
   display:flex;align-items:center;justify-content:space-between;
   gap:16px;flex-wrap:wrap;
 }
@@ -222,8 +265,13 @@ header{
   stroke-linecap:round;pointer-events:none;
 }
 
-/* ============ GALLERY (Masonry) ============ */
-main{max-width:1520px;margin:0 auto;padding:0 24px 90px}
+/* ============ VIEWS ============ */
+.view{display:none}
+.view.active{display:block}
+
+main{max-width:1580px;margin:0 auto;padding:0 24px 90px}
+
+/* ============ GALLERY ============ */
 .gallery{columns:5 232px;column-gap:16px}
 
 .card{
@@ -246,34 +294,40 @@ main{max-width:1520px;margin:0 auto;padding:0 24px 90px}
   box-shadow:0 22px 50px -18px rgba(168,85,247,.55);
   transform:translateY(-3px);
 }
-.card img{
+.card img,
+.card video{
   width:100%;height:auto;display:block;
   transition:transform .55s var(--ease), opacity .4s ease;
   opacity:0;
   background:linear-gradient(110deg,rgba(255,255,255,.05) 8%,rgba(255,255,255,.1) 18%,rgba(255,255,255,.05) 33%);
   background-size:220% 100%;
   animation:shimmer 1.4s linear infinite;
+  object-fit:cover;
 }
-.card img.loaded{opacity:1;animation:none;background:none}
-.card:hover img{transform:scale(1.055)}
+.card img.loaded,
+.card video.loaded{opacity:1;animation:none;background:none}
+.card:hover img,
+.card:hover video{transform:scale(1.055)}
 
 @keyframes shimmer{to{background-position:-220% 0}}
 
 .card-overlay{
   position:absolute;inset:0;
-  background:linear-gradient(to top,rgba(8,8,15,.92) 0%,rgba(8,8,15,.35) 32%,transparent 58%);
+  background:linear-gradient(to top,rgba(8,8,15,.94) 0%,rgba(8,8,15,.35) 34%,transparent 58%);
   opacity:0;transition:opacity .3s var(--ease);
   display:flex;flex-direction:column;justify-content:space-between;
   padding:12px;
+  pointer-events:none;
 }
 .card:hover .card-overlay{opacity:1}
+.card-overlay > *{pointer-events:auto}
 
-.card-top{display:flex;justify-content:flex-end}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
 .card-actions{display:flex;gap:7px}
 .act-btn{
   width:34px;height:34px;border-radius:10px;
   display:grid;place-items:center;
-  background:rgba(8,8,15,.6);
+  background:rgba(8,8,15,.62);
   border:1px solid rgba(255,255,255,.14);
   backdrop-filter:blur(9px);
   transition:all .2s var(--ease);
@@ -281,7 +335,8 @@ main{max-width:1520px;margin:0 auto;padding:0 24px 90px}
 }
 .act-btn:hover{background:rgba(255,255,255,.16);transform:scale(1.09)}
 .act-btn.fav.on{background:linear-gradient(135deg,#ff6ba6,#a855f7);border-color:transparent}
-.act-btn svg{width:15px;height:15px}
+.act-btn.danger:hover{background:rgba(248,113,113,.3);border-color:rgba(248,113,113,.5)}
+.act-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 
 .card-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .cat-badge{
@@ -292,6 +347,110 @@ main{max-width:1520px;margin:0 auto;padding:0 24px 90px}
   font-size:10.5px;font-weight:700;
   text-transform:uppercase;letter-spacing:.6px;
   color:#d9d9ea;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  max-width:70%;
+}
+.dur-badge{
+  padding:3px 8px;border-radius:99px;
+  background:rgba(8,8,15,.75);
+  border:1px solid rgba(255,255,255,.14);
+  font-size:10.5px;font-weight:700;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:.4px;
+  color:#fff;
+}
+
+/* Media kind badge */
+.kind-badge{
+  position:absolute;top:12px;left:12px;
+  padding:4px 9px;border-radius:8px;
+  background:rgba(8,8,15,.72);
+  border:1px solid rgba(255,255,255,.14);
+  backdrop-filter:blur(9px);
+  font-size:10px;font-weight:800;letter-spacing:.6px;
+  text-transform:uppercase;
+  display:flex;align-items:center;gap:5px;
+  color:#fff;
+  z-index:2;
+}
+.kind-badge svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.kind-badge.video{color:#fda4af}
+.kind-badge.audio{color:#7dd3fc}
+.kind-badge.image{color:#c4b5fd}
+.kind-badge.local{
+  top:auto;bottom:12px;left:12px;
+  background:linear-gradient(135deg,rgba(255,107,166,.9),rgba(168,85,247,.9));
+  border-color:transparent;
+  box-shadow:0 6px 16px -6px rgba(168,85,247,.9);
+}
+
+/* Play overlay for video */
+.play-pill{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:56px;height:56px;border-radius:50%;
+  display:grid;place-items:center;
+  background:rgba(8,8,15,.62);
+  border:1.5px solid rgba(255,255,255,.28);
+  backdrop-filter:blur(12px);
+  transition:all .25s var(--ease);
+  pointer-events:none;
+}
+.card:hover .play-pill{transform:translate(-50%,-50%) scale(1.08);background:rgba(8,8,15,.78)}
+.play-pill svg{
+  width:20px;height:20px;fill:#fff;margin-left:3px;
+  stroke:none;
+}
+
+/* Audio card */
+.audio-card-inner{
+  padding:22px;
+  min-height:160px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(168,85,247,.22), transparent 62%),
+    radial-gradient(circle at 0% 100%, rgba(255,107,166,.18), transparent 62%),
+    linear-gradient(135deg,rgba(255,255,255,.045),rgba(255,255,255,.02));
+}
+.audio-card-inner .vinyl{
+  width:64px;height:64px;border-radius:50%;
+  background:
+    radial-gradient(circle at center, #1a1a28 26%, transparent 27%),
+    repeating-radial-gradient(circle at center, #26263a 0 2px, #1a1a28 2px 4px);
+  position:relative;
+  box-shadow:0 8px 24px -8px rgba(0,0,0,.8), inset 0 0 0 1px rgba(255,255,255,.08);
+  animation:spin 6s linear infinite;
+  animation-play-state:paused;
+}
+.card:hover .audio-card-inner .vinyl,
+.card.playing .audio-card-inner .vinyl{animation-play-state:running}
+.audio-card-inner .vinyl::after{
+  content:"";position:absolute;inset:42%;
+  border-radius:50%;
+  background:var(--grad);
+  box-shadow:0 0 16px rgba(168,85,247,.75);
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.audio-card-inner .waveform{
+  display:flex;align-items:flex-end;gap:3px;height:34px;margin-top:16px;
+}
+.audio-card-inner .waveform span{
+  flex:1;background:linear-gradient(to top,rgba(168,85,247,.85),rgba(255,107,166,.85));
+  border-radius:2px;min-height:4px;
+  animation:wave 1.2s ease-in-out infinite;
+  animation-play-state:paused;
+  opacity:.85;
+}
+.card:hover .audio-card-inner .waveform span,
+.card.playing .audio-card-inner .waveform span{animation-play-state:running}
+@keyframes wave{0%,100%{transform:scaleY(.4)}50%{transform:scaleY(1)}}
+.audio-card-inner .meta{display:flex;flex-direction:column;gap:3px;min-width:0}
+.audio-card-inner .name{
+  font-size:12.5px;font-weight:700;color:var(--text);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.audio-card-inner .sub{
+  font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;
 }
 
 /* Skeleton */
@@ -303,15 +462,17 @@ main{max-width:1520px;margin:0 auto;padding:0 24px 90px}
   border:1px solid var(--border);
 }
 
-/* ============ LOADER / STATES ============ */
+/* ============ STATES ============ */
 .state{
   grid-column:1/-1;
-  text-align:center;padding:64px 20px;color:var(--muted);
+  text-align:center;padding:56px 20px;color:var(--muted);
 }
-.state .emoji{font-size:44px;margin-bottom:16px;display:block;opacity:.85}
+.state .emoji{font-size:44px;margin-bottom:14px;display:block;opacity:.85}
 .state h3{color:var(--text);font-size:17px;font-weight:700;margin-bottom:7px}
-.state p{font-size:14px;line-height:1.6;max-width:380px;margin:0 auto}
+.state p{font-size:14px;line-height:1.6;max-width:420px;margin:0 auto 18px}
+.state .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 
+/* ============ LOAD MORE ============ */
 .load-more-wrap{display:flex;justify-content:center;padding:34px 0 0}
 .btn-load{
   padding:13px 34px;border-radius:99px;
@@ -330,13 +491,83 @@ main{max-width:1520px;margin:0 auto;padding:0 24px 90px}
   border-top-color:#fff;
   animation:spin .7s linear infinite;
 }
-@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ============ DROPZONE ============ */
+.dropzone-wrap{
+  max-width:1100px;margin:0 auto 28px;
+  padding:0 24px;
+}
+.dropzone{
+  border:2px dashed rgba(255,255,255,.16);
+  border-radius:22px;
+  padding:38px 26px;
+  text-align:center;
+  background:linear-gradient(135deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+  transition:all .25s var(--ease);
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+}
+.dropzone:hover,
+.dropzone.dragover{
+  border-color:rgba(168,85,247,.7);
+  background:var(--grad-soft);
+  transform:translateY(-2px);
+  box-shadow:0 24px 60px -22px rgba(168,85,247,.65);
+}
+.dropzone.dragover{transform:scale(1.01)}
+.dz-icon{
+  width:64px;height:64px;border-radius:20px;
+  margin:0 auto 16px;
+  display:grid;place-items:center;
+  background:var(--grad);
+  box-shadow:0 14px 34px -10px rgba(168,85,247,.9);
+  animation:float 5s var(--ease) infinite;
+}
+.dz-icon svg{width:26px;height:26px;stroke:#fff;fill:none;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
+.dz-title{font-size:17px;font-weight:800;margin-bottom:6px;letter-spacing:-.2px}
+.dz-sub{font-size:13px;color:var(--muted);line-height:1.55;max-width:480px;margin:0 auto}
+.dz-formats{
+  display:flex;justify-content:center;gap:7px;flex-wrap:wrap;
+  margin-top:14px;
+}
+.dz-fmt{
+  padding:4px 11px;border-radius:99px;
+  background:var(--panel);border:1px solid var(--border);
+  font-size:11px;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.4px;
+}
+.dz-fmt.image{color:#c4b5fd;border-color:rgba(196,181,253,.35)}
+.dz-fmt.video{color:#fda4af;border-color:rgba(253,164,175,.35)}
+.dz-fmt.audio{color:#7dd3fc;border-color:rgba(125,211,252,.35)}
+
+/* ============ UPLOAD PROGRESS ============ */
+.upload-progress{
+  max-width:1100px;margin:0 auto 18px;padding:0 24px;display:none;
+}
+.upload-progress.show{display:block}
+.up-inner{
+  padding:14px 18px;border-radius:14px;
+  background:var(--panel);border:1px solid var(--border);
+  display:flex;align-items:center;gap:14px;
+}
+.up-inner .up-text{flex:1;font-size:13px;color:var(--muted);min-width:0}
+.up-inner .up-text b{color:var(--text);font-weight:700}
+.up-bar{
+  flex:0 0 160px;height:6px;border-radius:99px;
+  background:rgba(255,255,255,.08);overflow:hidden;
+}
+.up-bar-fill{
+  height:100%;width:0;
+  background:var(--grad);
+  transition:width .25s var(--ease);
+}
 
 /* ============ LIGHTBOX ============ */
 .lightbox{
   position:fixed;inset:0;z-index:200;
   display:flex;align-items:center;justify-content:center;
-  background:rgba(4,4,9,.9);
+  background:rgba(4,4,9,.92);
   backdrop-filter:blur(24px) saturate(140%);
   -webkit-backdrop-filter:blur(24px) saturate(140%);
   opacity:0;visibility:hidden;
@@ -347,20 +578,76 @@ main{max-width:1520px;margin:0 auto;padding:0 24px 90px}
 
 .lb-stage{
   position:relative;
-  max-width:min(1160px,94vw);
-  max-height:88vh;
+  max-width:min(1240px,96vw);
+  max-height:90vh;
   display:flex;flex-direction:column;align-items:center;
   transform:scale(.94);
   transition:transform .34s var(--ease);
 }
 .lightbox.open .lb-stage{transform:scale(1)}
-.lb-stage img{
-  max-width:100%;max-height:74vh;
-  object-fit:contain;
+
+.lb-media{
+  max-width:100%;max-height:76vh;
   border-radius:16px;
   box-shadow:0 40px 90px -30px rgba(0,0,0,.95), 0 0 0 1px rgba(255,255,255,.09);
   background:rgba(255,255,255,.03);
+  outline:none;
 }
+img.lb-media{object-fit:contain}
+video.lb-media{width:auto;}
+
+/* Audio lightbox */
+.lb-audio{
+  width:min(520px,92vw);
+  padding:32px 30px 26px;
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(168,85,247,.28), transparent 60%),
+    radial-gradient(circle at 0% 100%, rgba(255,107,166,.22), transparent 60%),
+    linear-gradient(135deg,rgba(255,255,255,.07),rgba(255,255,255,.02));
+  border:1px solid var(--border-2);
+  box-shadow:0 40px 90px -30px rgba(0,0,0,.95);
+  text-align:center;
+}
+.lb-audio .big-vinyl{
+  width:130px;height:130px;border-radius:50%;
+  margin:0 auto 22px;
+  background:
+    radial-gradient(circle at center, #1a1a28 26%, transparent 27%),
+    repeating-radial-gradient(circle at center, #26263a 0 3px, #1a1a28 3px 6px);
+  position:relative;
+  box-shadow:0 18px 44px -14px rgba(0,0,0,.95), inset 0 0 0 1px rgba(255,255,255,.09);
+  animation:spin 8s linear infinite;
+}
+.lb-audio .big-vinyl::after{
+  content:"";position:absolute;inset:42%;
+  border-radius:50%;
+  background:var(--grad);
+  box-shadow:0 0 24px rgba(168,85,247,.85);
+}
+.lb-audio .big-waveform{
+  display:flex;align-items:flex-end;gap:3px;height:44px;margin:0 auto 22px;
+  max-width:340px;
+}
+.lb-audio .big-waveform span{
+  flex:1;background:linear-gradient(to top,rgba(168,85,247,.9),rgba(255,107,166,.9));
+  border-radius:2px;min-height:4px;
+  animation:wave 1.3s ease-in-out infinite;
+}
+.lb-audio .lb-audio-title{
+  font-size:15px;font-weight:800;margin-bottom:6px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.lb-audio .lb-audio-sub{
+  font-size:12.5px;color:var(--muted);margin-bottom:20px;
+  font-variant-numeric:tabular-nums;
+}
+.lb-audio audio{
+  width:100%;outline:none;
+  border-radius:12px;
+  filter:invert(.92) hue-rotate(180deg) saturate(1.6);
+}
+
 .lb-meta{
   margin-top:16px;width:100%;
   display:flex;align-items:center;justify-content:space-between;
@@ -386,6 +673,7 @@ main{max-width:1520px;margin:0 auto;padding:0 24px 90px}
 .lb-btn:disabled{opacity:.32;cursor:not-allowed;transform:none}
 .lb-btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
 .lb-btn.fav.on{background:linear-gradient(135deg,#ff6ba6,#a855f7);border-color:transparent;color:#fff}
+.lb-btn.danger:hover{background:rgba(248,113,113,.3);border-color:rgba(248,113,113,.5)}
 
 .lb-counter{
   padding:0 13px;height:40px;border-radius:12px;
@@ -438,8 +726,8 @@ main{max-width:1520px;margin:0 auto;padding:0 24px 90px}
 }
 .toast.show{transform:translate(-50%,0);opacity:1}
 .toast .tdot{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
-.toast.ok .tdot{background:#34d399;box-shadow:0 0 12px #34d399}
-.toast.err .tdot{background:#f87171;box-shadow:0 0 12px #f87171}
+.toast.ok .tdot{background:var(--green);box-shadow:0 0 12px var(--green)}
+.toast.err .tdot{background:var(--red);box-shadow:0 0 12px var(--red)}
 .toast.info .tdot{background:#818cf8;box-shadow:0 0 12px #818cf8}
 
 /* ============ BACK TO TOP ============ */
@@ -472,31 +760,45 @@ footer .srcs{margin-top:8px;font-size:12px;opacity:.75}
 footer .srcs a{color:#a78bfa;text-decoration:underline;text-underline-offset:3px}
 
 /* ============ RESPONSIVE ============ */
-@media (max-width:1200px){ .gallery{columns:4 210px} }
+@media (max-width:1280px){ .gallery{columns:4 210px} }
+@media (max-width:1000px){
+  .header-inner{flex-wrap:wrap}
+  .tabs{order:3;width:100%;justify-content:center}
+  .tab{flex:1;justify-content:center}
+  .cat-wrap{top:auto;position:relative}
+}
 @media (max-width:900px){
   .gallery{columns:3 190px}
-  .hero{padding:46px 20px 24px}
+  .hero{padding:36px 20px 20px}
   .lb-nav{width:44px;height:44px}
   .lb-nav.prev{left:10px}
   .lb-nav.next{right:10px}
 }
 @media (max-width:640px){
-  .header-inner{padding:12px 16px}
+  .header-inner{padding:12px 16px;gap:12px}
   .logo-text{font-size:17px}
   .logo-icon{width:36px;height:36px;font-size:18px}
-  .hero{padding:36px 16px 18px}
+  .hero{padding:28px 16px 14px}
   .cat-scroll{padding:11px 16px}
-  .toolbar{padding:20px 16px 12px}
+  .toolbar{padding:18px 16px 12px}
   main{padding:0 16px 70px}
   .gallery{columns:2 150px;column-gap:12px}
   .card{margin-bottom:12px;border-radius:14px}
   .lb-sub{max-width:70vw}
-  .lb-stage img{max-height:62vh}
+  .lb-media{max-height:64vh}
   .icon-btn{padding:8px 12px;font-size:12.5px}
   .search-box{flex:1 1 100%}
   .to-top{right:16px;bottom:16px}
+  .tab{padding:7px 12px;font-size:12.5px}
+  .dropzone{padding:28px 18px}
+  .dz-icon{width:52px;height:52px}
+  .lb-audio{padding:24px 20px}
+  .lb-audio .big-vinyl{width:104px;height:104px}
 }
-@media (max-width:380px){ .gallery{columns:2 130px} }
+@media (max-width:380px){
+  .gallery{columns:2 130px}
+  .kind-badge{font-size:9px;padding:3px 7px}
+}
 
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
@@ -512,61 +814,152 @@ footer .srcs a{color:#a78bfa;text-decoration:underline;text-underline-offset:3px
       <div class="logo-icon">🌸</div>
       <div class="logo-text">Ani<span>Gallery</span></div>
     </div>
-    <div class="header-actions">
-      <button class="icon-btn" id="favBtn" title="Bộ sưu tập yêu thích">
-        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-        </svg>
+
+    <nav class="tabs" id="tabs">
+      <button class="tab active" data-view="explore">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        Khám phá
+      </button>
+      <button class="tab" data-view="library">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        Thư viện
+        <span class="count" id="libCount">0</span>
+      </button>
+      <button class="tab" data-view="favorites">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
         Yêu thích
         <span class="count" id="favCount">0</span>
+      </button>
+    </nav>
+
+    <div class="header-actions">
+      <button class="icon-btn primary" id="uploadBtn">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+        Tải lên
       </button>
     </div>
   </div>
 </header>
 
-<!-- ================= HERO ================= -->
-<section class="hero">
-  <div class="hero-badge">
-    <span class="dot"></span>
-    Đang kết nối API trực tiếp · Cập nhật liên tục
+<!-- ================= EXPLORE VIEW ================= -->
+<section class="view active" id="view-explore">
+  <div class="hero">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      API trực tiếp · Cập nhật liên tục
+    </div>
+    <h1>Thư viện <span class="grad">Media Anime</span><br/>đa định dạng</h1>
+    <p>Ảnh, video và âm thanh anime — khám phá từ API hoặc tải lên thiết bị của bạn. Mọi thứ được lưu ngay trong trình duyệt, không cần database.</p>
+    <div class="stat-row">
+      <div class="stat">🖼️ <b id="statImg">0</b> ảnh</div>
+      <div class="stat">🎬 <b id="statVid">0</b> video</div>
+      <div class="stat">🎵 <b id="statAud">0</b> âm thanh</div>
+      <div class="stat">💾 <b id="statSize">0 MB</b> đã lưu</div>
+    </div>
   </div>
-  <h1>Thư viện ảnh <span class="grad">Anime</span><br/>đẹp không giới hạn</h1>
-  <p>Khám phá hàng nghìn hình ảnh anime chất lượng cao — waifu, neko, husbando và nhiều thể loại khác, hoàn toàn miễn phí.</p>
+
+  <div class="cat-wrap">
+    <div class="cat-scroll" id="catScroll"></div>
+  </div>
+
+  <div class="toolbar">
+    <div class="result-info" id="resultInfo">Sẵn sàng tải ảnh ✨</div>
+    <div class="search-box">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" id="searchInput" placeholder="Tìm thể loại... (vd: neko, hug)" autocomplete="off" />
+    </div>
+  </div>
+
+  <main>
+    <div class="gallery" id="gallery"></div>
+    <div class="load-more-wrap" id="loadWrap" style="display:none">
+      <button class="btn-load" id="loadBtn">
+        <span id="loadBtnText">Tải thêm ảnh</span>
+      </button>
+    </div>
+  </main>
 </section>
 
-<!-- ================= CATEGORIES ================= -->
-<div class="cat-wrap">
-  <div class="cat-scroll" id="catScroll"></div>
-</div>
+<!-- ================= LIBRARY VIEW ================= -->
+<section class="view" id="view-library">
+  <div class="hero">
+    <h1>Thư viện <span class="grad">của bạn</span></h1>
+    <p>Tải lên ảnh, video, âm thanh — mọi thứ được lưu trong IndexedDB của trình duyệt, không gửi lên server.</p>
+  </div>
 
-<!-- ================= TOOLBAR ================= -->
-<div class="toolbar">
-  <div class="result-info" id="resultInfo">
-    Sẵn sàng tải ảnh <span class="hl">✨</span>
+  <div class="dropzone-wrap">
+    <div class="dropzone" id="dropzone">
+      <div class="dz-icon">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+      </div>
+      <div class="dz-title">Kéo & thả tệp vào đây</div>
+      <div class="dz-sub">hoặc bấm để chọn từ thiết bị. Tệp được lưu cục bộ, không upload lên máy chủ.</div>
+      <div class="dz-formats">
+        <span class="dz-fmt image">JPG · PNG · GIF · WEBP · SVG</span>
+        <span class="dz-fmt video">MP4 · WEBM · MOV · MKV</span>
+        <span class="dz-fmt audio">MP3 · WAV · OGG · M4A · FLAC</span>
+      </div>
+      <input type="file" id="fileInput" accept="image/*,video/*,audio/*" multiple hidden />
+    </div>
   </div>
-  <div class="search-box">
-    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-    <input type="text" id="searchInput" placeholder="Tìm thể loại... (vd: neko, hug)" autocomplete="off" />
-  </div>
-</div>
 
-<!-- ================= GALLERY ================= -->
-<main>
-  <div class="gallery" id="gallery"></div>
-  <div class="load-more-wrap" id="loadWrap" style="display:none">
-    <button class="btn-load" id="loadBtn">
-      <span id="loadBtnText">Tải thêm ảnh</span>
-    </button>
+  <div class="upload-progress" id="upProgress">
+    <div class="up-inner">
+      <div class="up-text" id="upText">Đang xử lý...</div>
+      <div class="up-bar"><div class="up-bar-fill" id="upBarFill"></div></div>
+    </div>
   </div>
-</main>
+
+  <div class="cat-wrap">
+    <div class="cat-scroll" id="libFilterScroll"></div>
+  </div>
+
+  <div class="toolbar">
+    <div class="result-info" id="libInfo">Chưa có tệp nào</div>
+    <div class="search-box">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" id="libSearch" placeholder="Tìm theo tên tệp..." autocomplete="off" />
+    </div>
+  </div>
+
+  <main>
+    <div class="gallery" id="libGallery"></div>
+    <div class="load-more-wrap" id="libEmptyWrap" style="display:none">
+      <button class="btn-load" id="libUploadBtn">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+        Tải tệp lên
+      </button>
+    </div>
+  </main>
+</section>
+
+<!-- ================= FAVORITES VIEW ================= -->
+<section class="view" id="view-favorites">
+  <div class="hero">
+    <h1>Bộ sưu tập <span class="grad">yêu thích</span></h1>
+    <p>Những ảnh và media bạn đã đánh dấu yêu thích, được lưu tự động.</p>
+  </div>
+
+  <div class="toolbar">
+    <div class="result-info" id="favInfo">Chưa có mục yêu thích</div>
+    <div class="search-box">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" id="favSearch" placeholder="Tìm trong yêu thích..." autocomplete="off" />
+    </div>
+  </div>
+
+  <main>
+    <div class="gallery" id="favGallery"></div>
+  </main>
+</section>
 
 <!-- ================= FOOTER ================= -->
 <footer>
-  <div>Made with 💜 by <b>AniGallery</b></div>
+  <div>Made with 💜 by <b>AniGallery</b> — Media library đa định dạng</div>
   <div class="srcs">
-    Nguồn ảnh:
-    <a href="https://nekos.best" target="_blank" rel="noopener">nekos.best</a> ·
+    API ảnh: <a href="https://nekos.best" target="_blank" rel="noopener">nekos.best</a> ·
     <a href="https://waifu.pics" target="_blank" rel="noopener">waifu.pics</a>
+    · Lưu trữ cục bộ: IndexedDB
   </div>
 </footer>
 
@@ -583,10 +976,10 @@ footer .srcs a{color:#a78bfa;text-decoration:underline;text-underline-offset:3px
   </button>
 
   <div class="lb-stage">
-    <img id="lbImg" src="" alt="Anime artwork" />
+    <div id="lbStage"></div>
     <div class="lb-meta">
       <div class="lb-info">
-        <div class="lb-title" id="lbTitle">Ảnh anime</div>
+        <div class="lb-title" id="lbTitle">Media</div>
         <div class="lb-sub" id="lbSub"></div>
       </div>
       <div class="lb-controls">
@@ -601,6 +994,9 @@ footer .srcs a{color:#a78bfa;text-decoration:underline;text-underline-offset:3px
         </button>
         <button class="lb-btn" id="lbSource" title="Mở nguồn gốc">
           <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6M10 14 21 3"/></svg>
+        </button>
+        <button class="lb-btn danger" id="lbDelete" title="Xoá khỏi thư viện" style="display:none">
+          <svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6"/></svg>
         </button>
       </div>
     </div>
@@ -620,77 +1016,148 @@ footer .srcs a{color:#a78bfa;text-decoration:underline;text-underline-offset:3px
 "use strict";
 
 /* ============================================================
-   CẤU HÌNH
+   CONFIG
    ============================================================ */
-const PAGE_SIZE = 20;           // số ảnh mỗi lần tải
-const NEKOS_API = "https://nekos.best/api/v2";
-const WAIFU_API = "https://api.waifu.pics/sfw";
-const FAV_KEY   = "anigallery:favorites:v1";
+const PAGE_SIZE   = 20;
+const NEKOS_API   = "https://nekos.best/api/v2";
+const WAIFU_API   = "https://api.waifu.pics/sfw";
+const FAV_KEY     = "anigallery:favs:v2";
+const DB_NAME     = "anigallery";
+const DB_VERSION  = 1;
+const STORE       = "uploads";
+const MAX_FILE_MB = 100;
 
-/* Danh mục: type = "nekos" | "waifupics" | "mixed" */
+/* ============================================================
+   CATEGORIES (images)
+   ============================================================ */
 const CATEGORIES = [
-  { id:"all",      label:"✨ Tất cả",     type:"mixed"     },
-  { id:"waifu",    label:"👧 Waifu",      type:"nekos"     },
-  { id:"neko",     label:"🐱 Neko",       type:"nekos"     },
-  { id:"husbando", label:"🤵 Husbando",   type:"nekos"     },
-  { id:"kitsune",  label:"🦊 Kitsune",    type:"nekos"     },
-  { id:"shinobu",  label:"🦋 Shinobu",    type:"waifupics" },
-  { id:"megumin",  label:"💥 Megumin",    type:"waifupics" },
-  { id:"cuddle",   label:"🤗 Cuddle",     type:"waifupics" },
-  { id:"hug",      label:"🫂 Hug",        type:"waifupics" },
-  { id:"kiss",     label:"💋 Kiss",       type:"waifupics" },
-  { id:"pat",      label:"🖐️ Pat",        type:"waifupics" },
-  { id:"smug",     label:"😏 Smug",       type:"waifupics" },
-  { id:"blush",    label:"😊 Blush",      type:"waifupics" },
-  { id:"dance",    label:"💃 Dance",      type:"waifupics" },
-  { id:"happy",    label:"😄 Happy",      type:"waifupics" },
-  { id:"wink",     label:"😉 Wink",       type:"waifupics" },
-  { id:"handhold", label:"🤝 Handhold",   type:"waifupics" },
-  { id:"highfive", label:"🙌 Highfive",   type:"waifupics" },
-  { id:"wave",     label:"👋 Wave",       type:"waifupics" },
+  { id:"all",      label:"✨ Tất cả",    type:"mixed"     },
+  { id:"waifu",    label:"👧 Waifu",     type:"nekos"     },
+  { id:"neko",     label:"🐱 Neko",      type:"nekos"     },
+  { id:"husbando", label:"🤵 Husbando",  type:"nekos"     },
+  { id:"kitsune",  label:"🦊 Kitsune",   type:"nekos"     },
+  { id:"shinobu",  label:"🦋 Shinobu",   type:"waifupics" },
+  { id:"megumin",  label:"💥 Megumin",   type:"waifupics" },
+  { id:"cuddle",   label:"🤗 Cuddle",    type:"waifupics" },
+  { id:"hug",      label:"🫂 Hug",       type:"nekos"     },
+  { id:"kiss",     label:"💋 Kiss",      type:"nekos"     },
+  { id:"pat",      label:"🖐️ Pat",       type:"nekos"     },
+  { id:"smug",     label:"😏 Smug",      type:"nekos"     },
+  { id:"blush",    label:"😊 Blush",     type:"nekos"     },
+  { id:"dance",    label:"💃 Dance",     type:"nekos"     },
+  { id:"happy",    label:"😄 Happy",     type:"waifupics" },
+  { id:"wink",     label:"😉 Wink",      type:"nekos"     },
+  { id:"wave",     label:"👋 Wave",      type:"nekos"     },
+  { id:"highfive", label:"🙌 Highfive",  type:"nekos"     },
+  { id:"handhold", label:"🤝 Handhold",  type:"nekos"     },
+  { id:"bite",     label:"😬 Bite",      type:"nekos"     },
+  { id:"cry",      label:"😢 Cry",       type:"nekos"     },
+  { id:"laugh",    label:"😂 Laugh",     type:"nekos"     },
+  { id:"poke",     label:"👉 Poke",      type:"nekos"     },
+  { id:"slap",     label:"👋 Slap",      type:"nekos"     },
+  { id:"tickle",   label:"🤣 Tickle",    type:"nekos"     },
+  { id:"feed",     label:"🍡 Feed",      type:"nekos"     },
+  { id:"kick",     label:"🦵 Kick",      type:"nekos"     },
+  { id:"punch",    label:"👊 Punch",     type:"nekos"     },
+  { id:"shoot",    label:"🔫 Shoot",     type:"nekos"     },
+  { id:"sleep",    label:"😴 Sleep",     type:"nekos"     },
+  { id:"stare",    label:"👀 Stare",     type:"nekos"     },
+  { id:"think",    label:"🤔 Think",     type:"nekos"     },
+  { id:"thumbsup", label:"👍 Thumbsup",  type:"nekos"     },
+  { id:"wag",      label:"🐕 Wag",       type:"nekos"     },
+  { id:"yeet",     label:"🚀 Yeet",      type:"nekos"     },
+  { id:"awoo",     label:"🐺 Awoo",      type:"waifupics" },
+  { id:"bonk",     label:"🔨 Bonk",      type:"waifupics" },
+  { id:"glomp",    label:"🫂 Glomp",     type:"waifupics" },
+  { id:"lick",     label:"👅 Lick",      type:"waifupics" },
+  { id:"bully",    label:"😈 Bully",     type:"waifupics" },
+];
+
+const LIB_FILTERS = [
+  { id:"all",   label:"Tất cả",     icon:"🗂️" },
+  { id:"image", label:"Ảnh",        icon:"🖼️" },
+  { id:"video", label:"Video",      icon:"🎬" },
+  { id:"audio", label:"Âm thanh",   icon:"🎵" },
 ];
 
 /* ============================================================
    STATE
    ============================================================ */
-let currentCat   = "all";
-let images       = [];         // ảnh đang hiển thị
-let seenUrls     = new Set();  // chống trùng
-let loading      = false;
-let favOnly      = false;
-let favorites    = loadFavorites();
-let lbIndex      = 0;
+const state = {
+  view: "explore",
+  currentCat: "all",
+  images: [],
+  seenUrls: new Set(),
+  loading: false,
+  favorites: [],
+  library: [],
+  libFilter: "all",
+  libSearch: "",
+  favSearch: "",
+  lbItems: [],
+  lbIndex: 0,
+  lbOrigin: null,       // "explore" | "library" | "favorites"
+};
+
+const urlCache = new Map(); // recordId -> objectURL
 
 /* ============================================================
    DOM
    ============================================================ */
 const $ = (s) => document.querySelector(s);
-const gallery     = $("#gallery");
-const catScroll   = $("#catScroll");
-const searchInput = $("#searchInput");
-const resultInfo  = $("#resultInfo");
-const loadWrap    = $("#loadWrap");
-const loadBtn     = $("#loadBtn");
-const loadBtnText = $("#loadBtnText");
-const favBtn      = $("#favBtn");
-const favCount    = $("#favCount");
-const lightbox    = $("#lightbox");
-const lbImg       = $("#lbImg");
-const lbTitle     = $("#lbTitle");
-const lbSub       = $("#lbSub");
-const lbCounter   = $("#lbCounter");
-const lbPrev      = $("#lbPrev");
-const lbNext      = $("#lbNext");
-const lbClose     = $("#lbClose");
-const lbFav       = $("#lbFav");
-const lbDownload  = $("#lbDownload");
-const lbSource    = $("#lbSource");
-const toastEl     = $("#toast");
-const toastMsg    = $("#toastMsg");
-const toTop       = $("#toTop");
+const $$ = (s) => document.querySelectorAll(s);
+
+const tabs         = $("#tabs");
+const gallery      = $("#gallery");
+const catScroll    = $("#catScroll");
+const searchInput  = $("#searchInput");
+const resultInfo   = $("#resultInfo");
+const loadWrap     = $("#loadWrap");
+const loadBtn      = $("#loadBtn");
+const loadBtnText  = $("#loadBtnText");
+const favCount     = $("#favCount");
+const libCount     = $("#libCount");
+const statImg      = $("#statImg");
+const statVid      = $("#statVid");
+const statAud      = $("#statAud");
+const statSize     = $("#statSize");
+
+const dropzone     = $("#dropzone");
+const fileInput    = $("#fileInput");
+const upProgress   = $("#upProgress");
+const upText       = $("#upText");
+const upBarFill    = $("#upBarFill");
+const libGallery   = $("#libGallery");
+const libInfo      = $("#libInfo");
+const libSearchIn  = $("#libSearch");
+const libFilterScr = $("#libFilterScroll");
+const libEmptyWrap = $("#libEmptyWrap");
+const libUploadBtn = $("#libUploadBtn");
+
+const favGallery   = $("#favGallery");
+const favInfo      = $("#favInfo");
+const favSearchIn  = $("#favSearch");
+
+const lightbox     = $("#lightbox");
+const lbStage      = $("#lbStage");
+const lbTitle      = $("#lbTitle");
+const lbSub        = $("#lbSub");
+const lbCounter    = $("#lbCounter");
+const lbPrev       = $("#lbPrev");
+const lbNext       = $("#lbNext");
+const lbClose      = $("#lbClose");
+const lbFav        = $("#lbFav");
+const lbDownload   = $("#lbDownload");
+const lbSource     = $("#lbSource");
+const lbDelete     = $("#lbDelete");
+
+const toastEl      = $("#toast");
+const toastMsg     = $("#toastMsg");
+const toTop        = $("#toTop");
+const uploadBtn    = $("#uploadBtn");
 
 /* ============================================================
-   TIỆN ÍCH
+   UTILS
    ============================================================ */
 const shuffle = (arr) => {
   const a = arr.slice();
@@ -701,13 +1168,37 @@ const shuffle = (arr) => {
   return a;
 };
 
-const extractExt = (url) => {
-  try {
-    const path = new URL(url).pathname;
-    const m = path.match(/\.(png|jpe?g|gif|webp|avif)$/i);
-    return m ? m[1].toLowerCase() : "png";
-  } catch { return "png"; }
+const escapeHtml = (s) =>
+  String(s ?? "").replace(/[&<>"']/g, (m) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m])
+  );
+const escapeAttr = escapeHtml;
+
+const formatBytes = (bytes) => {
+  if (!bytes || bytes < 1024) return (bytes || 0) + " B";
+  const k = 1024, sizes = ["B", "KB", "MB", "GB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
 };
+
+const formatDuration = (sec) => {
+  if (!isFinite(sec) || sec <= 0) return "";
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  const s = Math.floor(sec % 60);
+  return (h > 0 ? h + ":" + String(m).padStart(2, "0") : String(m))
+       + ":" + String(s).padStart(2, "0");
+};
+
+const getKind = (mime) => {
+  if (!mime) return "unknown";
+  if (mime.startsWith("image/")) return "image";
+  if (mime.startsWith("video/")) return "video";
+  if (mime.startsWith("audio/")) return "audio";
+  return "unknown";
+};
+
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 
 let toastTimer;
 function toast(msg, type = "info", duration = 2600) {
@@ -716,6 +1207,68 @@ function toast(msg, type = "info", duration = 2600) {
   toastEl.className = "toast " + type;
   requestAnimationFrame(() => toastEl.classList.add("show"));
   toastTimer = setTimeout(() => toastEl.classList.remove("show"), duration);
+}
+
+/* ============================================================
+   INDEXEDDB
+   ============================================================ */
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(STORE)) {
+        const store = db.createObjectStore(STORE, { keyPath: "id" });
+        store.createIndex("kind", "kind", { unique: false });
+        store.createIndex("addedAt", "addedAt", { unique: false });
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function dbAdd(record) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE, "readwrite");
+    const store = tx.objectStore(STORE);
+    const req = store.add(record);
+    req.onsuccess = () => resolve(record.id);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function dbGetAll() {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE, "readonly");
+    const req = tx.objectStore(STORE).getAll();
+    req.onsuccess = () => resolve(req.result || []);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function dbDelete(id) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE, "readwrite");
+    const req = tx.objectStore(STORE).delete(id);
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error);
+  });
+}
+
+function getObjectURL(record) {
+  if (urlCache.has(record.id)) return urlCache.get(record.id);
+  const url = URL.createObjectURL(record.blob);
+  urlCache.set(record.id, url);
+  return url;
+}
+
+function revokeObjectURL(id) {
+  const url = urlCache.get(id);
+  if (url) { URL.revokeObjectURL(url); urlCache.delete(id); }
 }
 
 /* ============================================================
@@ -729,38 +1282,79 @@ function loadFavorites() {
   } catch { return []; }
 }
 function saveFavorites() {
-  try { localStorage.setItem(FAV_KEY, JSON.stringify(favorites)); } catch {}
+  try { localStorage.setItem(FAV_KEY, JSON.stringify(state.favorites)); } catch {}
 }
-function isFav(url) {
-  return favorites.some((f) => f.url === url);
+function isFav(item) {
+  if (!item) return false;
+  const key = item.origin === "library" ? "lib:" + item.recordId : item.url;
+  return state.favorites.some((f) => {
+    const fk = f.origin === "library" ? "lib:" + f.recordId : f.url;
+    return fk === key;
+  });
+}
+function favKey(item) {
+  return item.origin === "library" ? "lib:" + item.recordId : item.url;
 }
 function toggleFav(item) {
-  const idx = favorites.findIndex((f) => f.url === item.url);
+  if (!item) return;
+  const key = favKey(item);
+  const idx = state.favorites.findIndex((f) => {
+    const fk = f.origin === "library" ? "lib:" + f.recordId : f.url;
+    return fk === key;
+  });
   if (idx >= 0) {
-    favorites.splice(idx, 1);
+    state.favorites.splice(idx, 1);
     toast("Đã xoá khỏi yêu thích", "info");
   } else {
-    favorites.unshift({
-      url: item.url,
+    state.favorites.unshift({
+      origin: item.origin || "explore",
+      url: item.url || "",
+      recordId: item.recordId || "",
       cat: item.cat || "",
+      name: item.name || "",
+      kind: item.kind || "image",
       source: item.source || "",
       artist: item.artist || "",
       artistUrl: item.artistUrl || "",
+      duration: item.duration || 0,
+      size: item.size || 0,
     });
     toast("Đã thêm vào yêu thích 💜", "ok");
   }
   saveFavorites();
-  updateFavUI();
+  updateAllFavUI();
+  updateStats();
 }
-function updateFavUI() {
-  favCount.textContent = favorites.length;
+
+function updateAllFavUI() {
+  favCount.textContent = state.favorites.length;
   document.querySelectorAll(".act-btn.fav").forEach((btn) => {
-    const url = btn.dataset.url;
-    btn.classList.toggle("on", isFav(url));
+    const key = btn.dataset.key;
+    const on = state.favorites.some((f) => {
+      const fk = f.origin === "library" ? "lib:" + f.recordId : f.url;
+      return fk === key;
+    });
+    btn.classList.toggle("on", on);
   });
-  if (lightbox.classList.contains("open") && images[lbIndex]) {
-    lbFav.classList.toggle("on", isFav(images[lbIndex].url));
+  if (lightbox.classList.contains("open") && state.lbItems[state.lbIndex]) {
+    lbFav.classList.toggle("on", isFav(state.lbItems[state.lbIndex]));
   }
+}
+
+/* ============================================================
+   STATS
+   ============================================================ */
+function updateStats() {
+  const imgs = state.library.filter((r) => r.kind === "image").length;
+  const vids = state.library.filter((r) => r.kind === "video").length;
+  const auds = state.library.filter((r) => r.kind === "audio").length;
+  const size = state.library.reduce((a, r) => a + (r.size || 0), 0);
+  statImg.textContent = imgs;
+  statVid.textContent = vids;
+  statAud.textContent = auds;
+  statSize.textContent = formatBytes(size);
+  libCount.textContent = state.library.length;
+  favCount.textContent = state.favorites.length;
 }
 
 /* ============================================================
@@ -774,6 +1368,8 @@ async function fetchNekos(cat, amount) {
   return (data.results || []).map((r) => ({
     url: r.url,
     cat,
+    kind: "image",
+    origin: "explore",
     source: r.source_url || "",
     artist: r.artist_name || "",
     artistUrl: r.artist_href || "",
@@ -790,11 +1386,19 @@ async function fetchWaifuPics(cat, amount) {
   const out = await Promise.all(jobs);
   return out
     .filter((x) => x && typeof x.url === "string")
-    .map((x) => ({ url: x.url, cat, source: "", artist: "", artistUrl: "" }));
+    .map((x) => ({
+      url: x.url,
+      cat,
+      kind: "image",
+      origin: "explore",
+      source: "",
+      artist: "",
+      artistUrl: "",
+    }));
 }
 
 async function fetchMixed(amount) {
-  const pool = ["neko", "waifu", "kitsune", "shinobu", "megumin", "awoo"];
+  const pool = ["neko", "waifu", "kitsune", "shinobu", "megumin", "awoo", "hug", "pat"];
   const picks = shuffle(pool).slice(0, 3);
   const per = Math.ceil(amount / picks.length);
 
@@ -811,13 +1415,39 @@ async function fetchMixed(amount) {
 }
 
 /* ============================================================
-   RENDER
+   VIEW SWITCHING
+   ============================================================ */
+function switchView(view) {
+  state.view = view;
+  $$(".view").forEach((v) => v.classList.remove("active"));
+  const target = document.getElementById("view-" + view);
+  if (target) target.classList.add("active");
+
+  $$(".tab").forEach((t) => t.classList.toggle("active", t.dataset.view === view));
+  closeLightbox();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+
+  if (view === "library") {
+    renderLibrary();
+  } else if (view === "favorites") {
+    renderFavorites();
+  }
+}
+
+tabs.addEventListener("click", (e) => {
+  const tab = e.target.closest(".tab");
+  if (!tab) return;
+  switchView(tab.dataset.view);
+});
+
+/* ============================================================
+   EXPLORE VIEW
    ============================================================ */
 function buildCategoryChips() {
   catScroll.innerHTML = "";
   CATEGORIES.forEach((c) => {
     const btn = document.createElement("button");
-    btn.className = "chip" + (c.id === currentCat ? " active" : "");
+    btn.className = "chip" + (c.id === state.currentCat ? " active" : "");
     btn.textContent = c.label;
     btn.dataset.cat = c.id;
     btn.addEventListener("click", () => selectCategory(c.id));
@@ -832,59 +1462,126 @@ function setActiveChip(id) {
 }
 
 function selectCategory(id) {
-  if (currentCat === id && !favOnly) return;
-  currentCat = id;
-  favOnly = false;
-  favBtn.classList.remove("active");
+  if (state.currentCat === id) return;
+  state.currentCat = id;
   setActiveChip(id);
-  resetGallery();
-  loadMore();
+  resetExplore();
+  loadMoreExplore();
 }
 
-function resetGallery() {
-  images = [];
-  seenUrls = new Set();
+function resetExplore() {
+  state.images = [];
+  state.seenUrls = new Set();
   gallery.innerHTML = "";
   loadWrap.style.display = "none";
-  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-function showSkeletons(count) {
-  const heights = [230, 300, 260, 340, 210, 290];
+function showSkeletons(container, count) {
+  const heights = [230, 300, 260, 340, 210, 290, 320, 240];
   for (let i = 0; i < count; i++) {
     const sk = document.createElement("div");
     sk.className = "skeleton";
     sk.style.height = heights[i % heights.length] + "px";
-    gallery.appendChild(sk);
+    container.appendChild(sk);
   }
 }
-function clearSkeletons() {
-  gallery.querySelectorAll(".skeleton").forEach((s) => s.remove());
+function clearSkeletons(container) {
+  container.querySelectorAll(".skeleton").forEach((s) => s.remove());
 }
 
-function createCard(item, delay) {
+/* ============================================================
+   CARD BUILDER
+   ============================================================ */
+function createCard(item, delay, opts = {}) {
   const card = document.createElement("div");
   card.className = "card";
   card.style.animationDelay = Math.min(delay, 500) + "ms";
-  card.dataset.url = item.url;
+  card.dataset.key = favKey(item);
+  card._item = item;
 
-  const img = document.createElement("img");
-  img.loading = "lazy";
-  img.decoding = "async";
-  img.alt = `Anime ${item.cat || ""}`.trim();
-  img.src = item.url;
+  const kind = item.kind || "image";
 
-  img.addEventListener("load", () => img.classList.add("loaded"), { once: true });
-  img.addEventListener("error", () => {
-    card.style.display = "none";
-  }, { once: true });
+  if (kind === "audio") {
+    card.classList.add("audio-card");
+    card.innerHTML = `
+      <div class="audio-card-inner">
+        <div class="vinyl"></div>
+        <div class="waveform">
+          ${Array.from({ length: 26 }, (_, i) =>
+            `<span style="animation-delay:${(i % 7) * 0.09}s"></span>`
+          ).join("")}
+        </div>
+        <div class="meta">
+          <div class="name">${escapeHtml(item.name || "Âm thanh")}</div>
+          <div class="sub">${escapeHtml(formatBytes(item.size || 0))}${item.duration ? " · " + formatDuration(item.duration) : ""}</div>
+        </div>
+      </div>
+    `;
+  } else {
+    const media = document.createElement(kind === "video" ? "video" : "img");
+    media.loading = "lazy";
+    media.decoding = "async";
+    media.src = item.url;
 
+    if (kind === "video") {
+      media.muted = true;
+      media.playsInline = true;
+      media.preload = "metadata";
+    } else {
+      media.alt = item.name || `Anime ${item.cat || ""}`.trim();
+    }
+
+    media.addEventListener("load", () => media.classList.add("loaded"), { once: true });
+    media.addEventListener("loadeddata", () => media.classList.add("loaded"), { once: true });
+    media.addEventListener("loadedmetadata", () => {
+      media.classList.add("loaded");
+      if (kind === "video" && media.duration && isFinite(media.duration)) {
+        const dur = card.querySelector(".dur-badge");
+        if (dur) dur.textContent = formatDuration(media.duration);
+        item.duration = media.duration;
+      }
+    }, { once: true });
+
+    media.addEventListener("error", () => {
+      card.style.display = "none";
+    }, { once: true });
+
+    card.appendChild(media);
+
+    if (kind === "video") {
+      const playPill = document.createElement("div");
+      playPill.className = "play-pill";
+      playPill.innerHTML = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
+      card.appendChild(playPill);
+    }
+  }
+
+  /* Kind badge */
+  const kindBadge = document.createElement("div");
+  kindBadge.className = "kind-badge " + kind;
+  const icons = {
+    image: `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>`,
+    video: `<svg viewBox="0 0 24 24"><path d="m23 7-7 5 7 5z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>`,
+    audio: `<svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>`,
+  };
+  kindBadge.innerHTML = icons[kind] + `<span>${kind === "image" ? "Ảnh" : kind === "video" ? "Video" : "Audio"}</span>`;
+  card.appendChild(kindBadge);
+
+  /* Local badge */
+  if (item.origin === "library") {
+    const localBadge = document.createElement("div");
+    localBadge.className = "kind-badge local";
+    localBadge.innerHTML = "💾 Đã lưu";
+    card.appendChild(localBadge);
+  }
+
+  /* Overlay */
   const overlay = document.createElement("div");
   overlay.className = "card-overlay";
   overlay.innerHTML = `
     <div class="card-top">
       <div class="card-actions">
-        <button class="act-btn fav" title="Yêu thích" data-url="${escapeAttr(item.url)}">
+        <button class="act-btn fav" title="Yêu thích" data-key="${escapeAttr(favKey(item))}">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
           </svg>
@@ -894,122 +1591,126 @@ function createCard(item, delay) {
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
           </svg>
         </button>
+        ${item.origin === "library" ? `
+        <button class="act-btn danger del" title="Xoá">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6"/>
+          </svg>
+        </button>` : ""}
       </div>
+      ${kind === "video" ? `<span class="dur-badge">--:--</span>` : ""}
     </div>
     <div class="card-bottom">
-      <span class="cat-badge">${escapeHtml(item.cat || "anime")}</span>
+      <span class="cat-badge">${escapeHtml(item.cat || (item.origin === "library" ? kind : "anime"))}</span>
     </div>
   `;
-
-  card.appendChild(img);
   card.appendChild(overlay);
 
-  /* Click mở lightbox */
+  /* Click open lightbox */
   card.addEventListener("click", (e) => {
     if (e.target.closest(".act-btn")) return;
-    const idx = images.findIndex((x) => x.url === item.url);
-    openLightbox(idx >= 0 ? idx : 0);
+    const list = opts.list || state.images;
+    const idx = list.findIndex((x) => favKey(x) === favKey(item));
+    if (idx >= 0) openLightbox(list, idx, opts.origin || "explore");
   });
 
-  /* Nút yêu thích */
-  const favButton = overlay.querySelector(".act-btn.fav");
-  favButton.addEventListener("click", (e) => {
+  /* Fav button */
+  const favBtn = overlay.querySelector(".act-btn.fav");
+  favBtn.addEventListener("click", (e) => {
     e.stopPropagation();
     toggleFav(item);
   });
 
-  /* Nút tải xuống */
-  const dlButton = overlay.querySelector(".act-btn.dl");
-  dlButton.addEventListener("click", (e) => {
+  /* Download */
+  const dlBtn = overlay.querySelector(".act-btn.dl");
+  if (dlBtn) dlBtn.addEventListener("click", (e) => {
     e.stopPropagation();
-    downloadImage(item.url, `anigallery-${item.cat || "anime"}-${Date.now()}.${extractExt(item.url)}`);
+    downloadMedia(item);
   });
+
+  /* Delete */
+  const delBtn = overlay.querySelector(".act-btn.del");
+  if (delBtn) delBtn.addEventListener("click", async (e) => {
+    e.stopPropagation();
+    if (!confirm("Xoá tệp này khỏi thư viện?")) return;
+    await removeLibraryItem(item.recordId);
+  });
+
+  /* Video hover preview */
+  if (kind === "video") {
+    const vid = card.querySelector("video");
+    card.addEventListener("mouseenter", () => {
+      if (vid && vid.paused) vid.play().catch(() => {});
+    });
+    card.addEventListener("mouseleave", () => {
+      if (vid) { vid.pause(); vid.currentTime = 0; }
+    });
+  }
 
   return card;
 }
 
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, (m) =>
-    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m])
-  );
-}
-function escapeAttr(s) { return escapeHtml(s); }
-
-function appendImages(list) {
-  if (!list.length) return;
-  const frag = document.createDocumentFragment();
-  list.forEach((item, i) => frag.appendChild(createCard(item, i * 32)));
-  gallery.appendChild(frag);
-  updateFavUI();
-}
-
-function updateResultInfo() {
-  const total = images.length;
-  const name = CATEGORIES.find((c) => c.id === currentCat)?.label || "Tất cả";
-  if (favOnly) {
-    resultInfo.innerHTML = `Đang xem <span class="hl">${total}</span> ảnh yêu thích`;
-  } else {
-    resultInfo.innerHTML = `<span class="hl">${name}</span> · Đã tải <b>${total}</b> ảnh`;
-  }
-}
-
 /* ============================================================
-   LOAD MORE
+   EXPLORE LOAD
    ============================================================ */
-async function loadMore() {
-  if (loading) return;
-  loading = true;
+async function loadMoreExplore() {
+  if (state.loading) return;
+  state.loading = true;
   loadBtn.disabled = true;
   loadBtnText.textContent = "Đang tải...";
   const spinner = document.createElement("span");
   spinner.className = "spinner";
   loadBtn.prepend(spinner);
 
-  showSkeletons(Math.min(PAGE_SIZE, 8));
+  showSkeletons(gallery, Math.min(PAGE_SIZE, 8));
 
   try {
     let fetched = [];
-    if (currentCat === "all") {
+    if (state.currentCat === "all") {
       fetched = await fetchMixed(PAGE_SIZE);
     } else {
-      const cfg = CATEGORIES.find((c) => c.id === currentCat);
-      fetched =
-        cfg.type === "nekos"
-          ? await fetchNekos(cfg.id, PAGE_SIZE)
-          : await fetchWaifuPics(cfg.id, PAGE_SIZE);
+      const cfg = CATEGORIES.find((c) => c.id === state.currentCat);
+      fetched = cfg.type === "nekos"
+        ? await fetchNekos(cfg.id, PAGE_SIZE)
+        : await fetchWaifuPics(cfg.id, PAGE_SIZE);
     }
 
-    const fresh = fetched.filter((x) => x.url && !seenUrls.has(x.url));
-    fresh.forEach((x) => seenUrls.add(x.url));
+    const fresh = fetched.filter((x) => x.url && !state.seenUrls.has(x.url));
+    fresh.forEach((x) => state.seenUrls.add(x.url));
+    state.images.push(...fresh);
 
-    images.push(...fresh);
-    clearSkeletons();
-    appendImages(fresh);
-    updateResultInfo();
+    clearSkeletons(gallery);
 
-    if (!fresh.length && !images.length) {
-      renderEmpty("Không tìm thấy ảnh", "Hãy thử chọn thể loại khác nhé!");
+    if (!fresh.length && !state.images.length) {
+      renderEmptyExplore("Không tìm thấy ảnh", "Hãy thử chọn thể loại khác nhé!");
       loadWrap.style.display = "none";
     } else {
+      const frag = document.createDocumentFragment();
+      fresh.forEach((item, i) =>
+        frag.appendChild(createCard(item, i * 32, { list: state.images, origin: "explore" }))
+      );
+      gallery.appendChild(frag);
       loadWrap.style.display = "flex";
+      updateAllFavUI();
     }
+    updateExploreInfo();
   } catch (err) {
     console.error(err);
-    clearSkeletons();
-    if (!images.length) {
-      renderEmpty("Không thể kết nối", "Kiểm tra kết nối mạng của bạn rồi thử lại.");
+    clearSkeletons(gallery);
+    if (!state.images.length) {
+      renderEmptyExplore("Không thể kết nối", "Kiểm tra kết nối mạng của bạn rồi thử lại.");
     } else {
       toast("Lỗi tải ảnh, vui lòng thử lại", "err");
     }
   } finally {
-    loading = false;
+    state.loading = false;
     spinner.remove();
     loadBtn.disabled = false;
     loadBtnText.textContent = "Tải thêm ảnh";
   }
 }
 
-function renderEmpty(title, desc) {
+function renderEmptyExplore(title, desc) {
   gallery.innerHTML = `
     <div class="state">
       <span class="emoji">🍃</span>
@@ -1018,91 +1719,472 @@ function renderEmpty(title, desc) {
     </div>`;
 }
 
+function updateExploreInfo() {
+  const total = state.images.length;
+  const name = CATEGORIES.find((c) => c.id === state.currentCat)?.label || "Tất cả";
+  resultInfo.innerHTML = `<span class="hl">${escapeHtml(name)}</span> · Đã tải <b>${total}</b> ảnh`;
+}
+
 /* ============================================================
-   LIGHTBOX
+   LIBRARY
    ============================================================ */
-function openLightbox(index) {
-  if (!images.length) return;
-  lbIndex = Math.max(0, Math.min(index, images.length - 1));
-  renderLightbox();
-  lightbox.classList.add("open");
-  document.body.style.overflow = "hidden";
+function buildLibFilters() {
+  libFilterScr.innerHTML = "";
+  LIB_FILTERS.forEach((f) => {
+    const btn = document.createElement("button");
+    btn.className = "chip filter-chip" + (f.id === state.libFilter ? " active" : "");
+    btn.innerHTML = `<span class="ic">${f.icon}</span>${f.label}`;
+    btn.dataset.filter = f.id;
+    btn.addEventListener("click", () => {
+      state.libFilter = f.id;
+      libFilterScr.querySelectorAll(".chip").forEach((c) =>
+        c.classList.toggle("active", c.dataset.filter === f.id)
+      );
+      renderLibrary();
+    });
+    libFilterScr.appendChild(btn);
+  });
 }
 
-function closeLightbox() {
-  lightbox.classList.remove("open");
-  document.body.style.overflow = "";
+async function loadLibraryFromDB() {
+  try {
+    state.library = await dbGetAll();
+    state.library.sort((a, b) => (b.addedAt || 0) - (a.addedAt || 0));
+  } catch (err) {
+    console.error("DB load error", err);
+    state.library = [];
+  }
+  updateStats();
 }
 
-function renderLightbox() {
-  const item = images[lbIndex];
-  if (!item) return;
+function renderLibrary() {
+  const q = state.libSearch.trim().toLowerCase();
+  let items = state.library.filter((r) => {
+    if (state.libFilter !== "all" && r.kind !== state.libFilter) return false;
+    if (q && !(r.name || "").toLowerCase().includes(q)) return false;
+    return true;
+  });
 
-  lbImg.style.opacity = "0";
-  const tmp = new Image();
-  tmp.onload = () => {
-    lbImg.src = item.url;
-    lbImg.style.transition = "opacity .28s ease";
-    lbImg.style.opacity = "1";
+  libGallery.innerHTML = "";
+
+  if (!items.length) {
+    if (!state.library.length) {
+      libGallery.innerHTML = `
+        <div class="state">
+          <span class="emoji">📭</span>
+          <h3>Thư viện trống</h3>
+          <p>Kéo & thả hoặc bấm nút bên dưới để tải tệp lên. Mọi thứ được lưu ngay trong trình duyệt của bạn.</p>
+        </div>`;
+      libEmptyWrap.style.display = "flex";
+    } else {
+      libGallery.innerHTML = `
+        <div class="state">
+          <span class="emoji">🔍</span>
+          <h3>Không có kết quả</h3>
+          <p>Thử thay đổi bộ lọc hoặc từ khoá tìm kiếm.</p>
+        </div>`;
+      libEmptyWrap.style.display = "none";
+    }
+    libInfo.innerHTML = `Tổng cộng <b>${state.library.length}</b> tệp`;
+    return;
+  }
+
+  libEmptyWrap.style.display = "none";
+
+  const frag = document.createDocumentFragment();
+  items.forEach((record, i) => {
+    const item = recordToItem(record);
+    frag.appendChild(createCard(item, i * 32, { list: items.map(recordToItem), origin: "library" }));
+  });
+  libGallery.appendChild(frag);
+  updateAllFavUI();
+
+  libInfo.innerHTML = `Hiển thị <b>${items.length}</b> / ${state.library.length} tệp`;
+}
+
+function recordToItem(record) {
+  return {
+    origin: "library",
+    recordId: record.id,
+    url: getObjectURL(record),
+    name: record.name || "Tệp",
+    cat: record.kind || "upload",
+    kind: record.kind || "image",
+    size: record.size || 0,
+    duration: record.duration || 0,
+    source: "",
+    artist: "",
+    artistUrl: "",
   };
-  tmp.onerror = () => { lbImg.src = item.url; lbImg.style.opacity = "1"; };
-  tmp.src = item.url;
+}
 
-  lbTitle.textContent = (item.cat ? item.cat.toUpperCase() : "ANIME") + " artwork";
+async function removeLibraryItem(recordId) {
+  try {
+    await dbDelete(recordId);
+    revokeObjectURL(recordId);
+    state.library = state.library.filter((r) => r.id !== recordId);
 
-  const parts = [];
-  if (item.artist) {
-    parts.push(
-      item.artistUrl
-        ? `Nghệ sĩ: <a href="${escapeAttr(item.artistUrl)}" target="_blank" rel="noopener">${escapeHtml(item.artist)}</a>`
-        : `Nghệ sĩ: ${escapeHtml(item.artist)}`
+    // Remove from favorites
+    const beforeLen = state.favorites.length;
+    state.favorites = state.favorites.filter(
+      (f) => !(f.origin === "library" && f.recordId === recordId)
     );
-  }
-  if (item.source) {
-    parts.push(`<a href="${escapeAttr(item.source)}" target="_blank" rel="noopener">Nguồn gốc ↗</a>`);
-  }
-  lbSub.innerHTML = parts.length ? parts.join(" · ") : "Nguồn: waifu.pics";
+    if (state.favorites.length !== beforeLen) saveFavorites();
 
-  lbCounter.textContent = `${lbIndex + 1} / ${images.length}`;
-  lbPrev.disabled = lbIndex === 0;
-  lbNext.disabled = lbIndex === images.length - 1;
-  lbFav.classList.toggle("on", isFav(item.url));
-  lbSource.style.display = item.source ? "grid" : "none";
+    updateStats();
+    renderLibrary();
+    updateAllFavUI();
+    toast("Đã xoá tệp khỏi thư viện", "ok");
+    closeLightbox();
+  } catch (err) {
+    console.error(err);
+    toast("Không thể xoá tệp", "err");
+  }
 }
 
-function nextImage() {
-  if (lbIndex < images.length - 1) { lbIndex++; renderLightbox(); }
+/* ============================================================
+   UPLOAD
+   ============================================================ */
+let isUploading = false;
+
+async function handleFiles(files) {
+  if (isUploading) return;
+  const list = Array.from(files || []);
+  if (!list.length) return;
+
+  // Filter valid media
+  const valid = list.filter((f) => {
+    const k = getKind(f.type);
+    if (k === "unknown") return false;
+    if (f.size > MAX_FILE_MB * 1024 * 1024) {
+      toast(`"${f.name}" vượt quá ${MAX_FILE_MB}MB`, "err", 3400);
+      return false;
+    }
+    return true;
+  });
+
+  if (!valid.length) {
+    toast("Không có tệp hợp lệ (ảnh / video / âm thanh)", "err");
+    return;
+  }
+
+  isUploading = true;
+  upProgress.classList.add("show");
+  let done = 0;
+
+  for (const file of valid) {
+    const kind = getKind(file.type);
+    const id = uid();
+
+    try {
+      upText.innerHTML = `Đang xử lý <b>${escapeHtml(file.name)}</b> (${done + 1}/${valid.length})`;
+      upBarFill.style.width = ((done) / valid.length * 100) + "%";
+
+      const record = {
+        id,
+        name: file.name,
+        kind,
+        mime: file.type,
+        size: file.size,
+        blob: file,
+        addedAt: Date.now(),
+        duration: 0,
+      };
+
+      // Try to extract duration for video/audio
+      if (kind === "video" || kind === "audio") {
+        try {
+          record.duration = await getMediaDuration(file, kind);
+        } catch {}
+      }
+
+      await dbAdd(record);
+      state.library.unshift(record);
+      done++;
+    } catch (err) {
+      console.error("Upload error", file.name, err);
+      toast(`Lỗi lưu "${file.name}"`, "err");
+    }
+  }
+
+  upBarFill.style.width = "100%";
+  upText.innerHTML = `Hoàn tất <b>${done}</b> tệp`;
+
+  setTimeout(() => {
+    upProgress.classList.remove("show");
+    upBarFill.style.width = "0%";
+  }, 900);
+
+  isUploading = false;
+  updateStats();
+  renderLibrary();
+  toast(`Đã thêm ${done} tệp vào thư viện ✓`, "ok");
 }
-function prevImage() {
-  if (lbIndex > 0) { lbIndex--; renderLightbox(); }
+
+function getMediaDuration(file, kind) {
+  return new Promise((resolve) => {
+    const url = URL.createObjectURL(file);
+    const el = kind === "video"
+      ? document.createElement("video")
+      : document.createElement("audio");
+    let settled = false;
+    const cleanup = (val) => {
+      if (settled) return;
+      settled = true;
+      URL.revokeObjectURL(url);
+      el.src = "";
+      resolve(val || 0);
+    };
+    el.preload = "metadata";
+    el.onloadedmetadata = () => cleanup(el.duration);
+    el.onerror = () => cleanup(0);
+    setTimeout(() => cleanup(0), 4000);
+    el.src = url;
+  });
+}
+
+/* Dropzone events */
+dropzone.addEventListener("click", () => fileInput.click());
+libUploadBtn.addEventListener("click", () => fileInput.click());
+uploadBtn.addEventListener("click", () => {
+  switchView("library");
+  setTimeout(() => fileInput.click(), 120);
+});
+fileInput.addEventListener("change", (e) => {
+  handleFiles(e.target.files);
+  e.target.value = "";
+});
+
+["dragenter", "dragover"].forEach((ev) => {
+  dropzone.addEventListener(ev, (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dropzone.classList.add("dragover");
+  });
+});
+["dragleave", "drop"].forEach((ev) => {
+  dropzone.addEventListener(ev, (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dropzone.classList.remove("dragover");
+  });
+});
+dropzone.addEventListener("drop", (e) => {
+  const files = e.dataTransfer?.files;
+  if (files) handleFiles(files);
+});
+
+/* Prevent dropping outside dropzone */
+window.addEventListener("dragover", (e) => e.preventDefault());
+window.addEventListener("drop", (e) => e.preventDefault());
+
+/* ============================================================
+   FAVORITES VIEW
+   ============================================================ */
+function renderFavorites() {
+  const q = state.favSearch.trim().toLowerCase();
+  const items = state.favorites.filter((f) => {
+    if (!q) return true;
+    const name = (f.name || f.cat || "").toLowerCase();
+    return name.includes(q);
+  });
+
+  favGallery.innerHTML = "";
+
+  if (!items.length) {
+    if (!state.favorites.length) {
+      favGallery.innerHTML = `
+        <div class="state">
+          <span class="emoji">💜</span>
+          <h3>Chưa có mục yêu thích</h3>
+          <p>Nhấn vào trái tim trên mỗi thẻ để lưu vào bộ sưu tập của bạn.</p>
+        </div>`;
+    } else {
+      favGallery.innerHTML = `
+        <div class="state">
+          <span class="emoji">🔍</span>
+          <h3>Không tìm thấy</h3>
+          <p>Thử từ khoá khác nhé.</p>
+        </div>`;
+    }
+    favInfo.innerHTML = `<b>${state.favorites.length}</b> mục yêu thích`;
+    return;
+  }
+
+  // Hydrate library items with fresh object URLs
+  const hydrated = items.map((f) => {
+    if (f.origin === "library") {
+      const rec = state.library.find((r) => r.id === f.recordId);
+      if (rec) {
+        return {
+          ...f,
+          url: getObjectURL(rec),
+          kind: rec.kind,
+          size: rec.size,
+          duration: rec.duration || f.duration,
+        };
+      }
+      return { ...f, url: "", kind: f.kind || "image" };
+    }
+    return { ...f, origin: f.origin || "explore", kind: f.kind || "image" };
+  }).filter((x) => x.url);
+
+  const frag = document.createDocumentFragment();
+  hydrated.forEach((item, i) => {
+    frag.appendChild(createCard(item, i * 32, { list: hydrated, origin: "favorites" }));
+  });
+  favGallery.appendChild(frag);
+  updateAllFavUI();
+
+  favInfo.innerHTML = `Hiển thị <b>${hydrated.length}</b> / ${state.favorites.length} mục yêu thích`;
 }
 
 /* ============================================================
    DOWNLOAD
    ============================================================ */
-async function downloadImage(url, filename) {
-  toast("Đang tải ảnh...", "info", 1600);
+async function downloadMedia(item) {
+  if (!item || !item.url) return;
+  toast("Đang tải xuống...", "info", 1600);
+
+  const filename = item.name || `anigallery-${item.cat || "media"}-${Date.now()}`;
+
   try {
-    const res = await fetch(url, { mode: "cors" });
+    const res = await fetch(item.url, { mode: "cors" });
     if (!res.ok) throw new Error("bad response");
     const blob = await res.blob();
     const objectUrl = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = objectUrl;
-    a.download = filename || `anime.${extractExt(url)}`;
+    a.download = filename;
     document.body.appendChild(a);
     a.click();
     a.remove();
     setTimeout(() => URL.revokeObjectURL(objectUrl), 4000);
-    toast("Đã tải ảnh về máy ✓", "ok");
+    toast("Đã tải xuống ✓", "ok");
   } catch {
-    window.open(url, "_blank", "noopener");
-    toast("Đã mở ảnh trong tab mới", "info");
+    // For local library items it's a blob URL — download directly
+    const a = document.createElement("a");
+    a.href = item.url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    toast("Đã tải xuống ✓", "ok");
   }
 }
 
 /* ============================================================
-   SEARCH (lọc chip thể loại)
+   LIGHTBOX
+   ============================================================ */
+function openLightbox(items, index, origin) {
+  if (!items.length) return;
+  state.lbItems = items;
+  state.lbIndex = Math.max(0, Math.min(index, items.length - 1));
+  state.lbOrigin = origin;
+  renderLightbox();
+  lightbox.classList.add("open");
+  document.body.classList.add("no-scroll");
+}
+
+function closeLightbox() {
+  lightbox.classList.remove("open");
+  document.body.classList.remove("no-scroll");
+  // Stop any playing media
+  lbStage.querySelectorAll("video, audio").forEach((el) => {
+    try { el.pause(); el.currentTime = 0; } catch {}
+  });
+  lbStage.innerHTML = "";
+}
+
+function renderLightbox() {
+  const item = state.lbItems[state.lbIndex];
+  if (!item) return;
+
+  const kind = item.kind || "image";
+  lbStage.innerHTML = "";
+
+  if (kind === "video") {
+    const video = document.createElement("video");
+    video.src = item.url;
+    video.controls = true;
+    video.autoplay = true;
+    video.playsInline = true;
+    video.className = "lb-media";
+    lbStage.appendChild(video);
+
+    lbTitle.textContent = item.name || "Video";
+    const parts = [`Video${item.cat ? " · " + item.cat : ""}`];
+    if (item.size) parts.push(formatBytes(item.size));
+    lbSub.innerHTML = parts.join(" · ");
+
+  } else if (kind === "audio") {
+    const wrap = document.createElement("div");
+    wrap.className = "lb-audio";
+    wrap.innerHTML = `
+      <div class="big-vinyl"></div>
+      <div class="big-waveform">
+        ${Array.from({ length: 32 }, (_, i) =>
+          `<span style="animation-delay:${(i % 9) * 0.08}s"></span>`
+        ).join("")}
+      </div>
+      <div class="lb-audio-title">${escapeHtml(item.name || "Âm thanh")}</div>
+      <div class="lb-audio-sub">${escapeHtml(formatBytes(item.size || 0))}${item.duration ? " · " + formatDuration(item.duration) : ""}</div>
+      <audio src="${escapeAttr(item.url)}" controls autoplay></audio>
+    `;
+    lbStage.appendChild(wrap);
+
+    lbTitle.textContent = item.name || "Âm thanh";
+    lbSub.textContent = item.cat ? item.cat : "Âm thanh";
+
+  } else {
+    const img = document.createElement("img");
+    img.className = "lb-media";
+    img.alt = item.name || "Anime artwork";
+    img.src = item.url;
+    lbStage.appendChild(img);
+
+    lbTitle.textContent = (item.cat ? String(item.cat).toUpperCase() : "ANIME") + " artwork";
+
+    const parts = [];
+    if (item.artist) {
+      parts.push(
+        item.artistUrl
+          ? `Nghệ sĩ: <a href="${escapeAttr(item.artistUrl)}" target="_blank" rel="noopener">${escapeHtml(item.artist)}</a>`
+          : `Nghệ sĩ: ${escapeHtml(item.artist)}`
+      );
+    }
+    if (item.source) {
+      parts.push(`<a href="${escapeAttr(item.source)}" target="_blank" rel="noopener">Nguồn gốc ↗</a>`);
+    }
+    if (item.name && item.origin === "library") {
+      parts.unshift(escapeHtml(item.name));
+    }
+    lbSub.innerHTML = parts.length ? parts.join(" · ") : "Nguồn: waifu.pics";
+  }
+
+  lbCounter.textContent = `${state.lbIndex + 1} / ${state.lbItems.length}`;
+  lbPrev.disabled = state.lbIndex === 0;
+  lbNext.disabled = state.lbIndex === state.lbItems.length - 1;
+  lbFav.classList.toggle("on", isFav(item));
+  lbSource.style.display = item.source ? "grid" : "none";
+  lbDelete.style.display = (item.origin === "library" && item.recordId) ? "grid" : "none";
+}
+
+function nextImage() {
+  if (state.lbIndex < state.lbItems.length - 1) {
+    state.lbIndex++;
+    renderLightbox();
+  }
+}
+function prevImage() {
+  if (state.lbIndex > 0) {
+    state.lbIndex--;
+    renderLightbox();
+  }
+}
+
+/* ============================================================
+   SEARCH
    ============================================================ */
 searchInput.addEventListener("input", (e) => {
   const q = e.target.value.trim().toLowerCase();
@@ -1115,61 +2197,52 @@ searchInput.addEventListener("input", (e) => {
     if (match) visible++;
   });
   if (!visible && q) {
-    // Không có thể loại khớp — hiện lại tất cả
     catScroll.querySelectorAll(".chip").forEach((c) => (c.style.display = ""));
   }
+});
+
+libSearchIn.addEventListener("input", (e) => {
+  state.libSearch = e.target.value;
+  renderLibrary();
+});
+
+favSearchIn.addEventListener("input", (e) => {
+  state.favSearch = e.target.value;
+  renderFavorites();
 });
 
 /* ============================================================
    EVENTS
    ============================================================ */
-loadBtn.addEventListener("click", loadMore);
-
-favBtn.addEventListener("click", () => {
-  favOnly = !favOnly;
-  favBtn.classList.toggle("active", favOnly);
-  gallery.innerHTML = "";
-  loadWrap.style.display = "none";
-
-  if (favOnly) {
-    images = favorites.map((f) => ({
-      url: f.url, cat: f.cat || "favorite",
-      source: f.source || "", artist: f.artist || "", artistUrl: f.artistUrl || "",
-    }));
-    if (!images.length) {
-      renderEmpty("Chưa có ảnh yêu thích", "Nhấn vào trái tim trên mỗi ảnh để lưu vào bộ sưu tập nhé!");
-    } else {
-      appendImages(images);
-      loadWrap.style.display = "none";
-    }
-    updateResultInfo();
-  } else {
-    resetGallery();
-    loadMore();
-  }
-});
+loadBtn.addEventListener("click", loadMoreExplore);
 
 lbClose.addEventListener("click", closeLightbox);
 lbPrev.addEventListener("click", prevImage);
 lbNext.addEventListener("click", nextImage);
-
 lightbox.addEventListener("click", (e) => {
   if (e.target === lightbox) closeLightbox();
 });
 
 lbFav.addEventListener("click", () => {
-  const item = images[lbIndex];
+  const item = state.lbItems[state.lbIndex];
   if (item) toggleFav(item);
 });
 
 lbDownload.addEventListener("click", () => {
-  const item = images[lbIndex];
-  if (item) downloadImage(item.url, `anigallery-${item.cat || "anime"}-${Date.now()}.${extractExt(item.url)}`);
+  const item = state.lbItems[state.lbIndex];
+  if (item) downloadMedia(item);
 });
 
 lbSource.addEventListener("click", () => {
-  const item = images[lbIndex];
+  const item = state.lbItems[state.lbIndex];
   if (item?.source) window.open(item.source, "_blank", "noopener");
+});
+
+lbDelete.addEventListener("click", async () => {
+  const item = state.lbItems[state.lbIndex];
+  if (!item || !item.recordId) return;
+  if (!confirm("Xoá tệp này khỏi thư viện?")) return;
+  await removeLibraryItem(item.recordId);
 });
 
 document.addEventListener("keydown", (e) => {
@@ -1179,12 +2252,12 @@ document.addEventListener("keydown", (e) => {
   else if (e.key === "ArrowLeft") prevImage();
 });
 
-/* Touch swipe trong lightbox */
+/* Touch swipe in lightbox */
 let touchStartX = 0;
-lbImg.addEventListener("touchstart", (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
-lbImg.addEventListener("touchend", (e) => {
+lbStage.addEventListener("touchstart", (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
+lbStage.addEventListener("touchend", (e) => {
   const dx = e.changedTouches[0].clientX - touchStartX;
-  if (Math.abs(dx) > 55) { dx < 0 ? nextImage() : prevImage(); }
+  if (Math.abs(dx) > 60) { dx < 0 ? nextImage() : prevImage(); }
 }, { passive: true });
 
 /* Back to top */
@@ -1193,10 +2266,10 @@ window.addEventListener("scroll", () => {
 }, { passive: true });
 toTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
 
-/* Infinite scroll nhẹ nhàng */
+/* Infinite scroll for explore */
 const io = new IntersectionObserver((entries) => {
-  if (entries[0].isIntersecting && !loading && !favOnly && images.length > 0) {
-    loadMore();
+  if (entries[0].isIntersecting && !state.loading && state.view === "explore" && state.images.length > 0) {
+    loadMoreExplore();
   }
 }, { rootMargin: "600px 0px" });
 io.observe(loadWrap);
@@ -1204,12 +2277,22 @@ io.observe(loadWrap);
 /* ============================================================
    INIT
    ============================================================ */
-function init() {
+async function init() {
+  state.favorites = loadFavorites();
   buildCategoryChips();
-  updateFavUI();
-  showSkeletons(10);
-  loadMore();
+  buildLibFilters();
+  updateAllFavUI();
+
+  await loadLibraryFromDB();
+  updateStats();
+
+  showSkeletons(gallery, 10);
+  loadMoreExplore();
+
+  // Update library info
+  renderLibrary();
 }
+
 init();
 
 })();
