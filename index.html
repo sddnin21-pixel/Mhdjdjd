@@ -2,20 +2,27 @@
 <html lang="vi" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Qusin Flashcard ✦ Học thông minh</title>
 <meta name="theme-color" content="#7c5cff">
-<meta name="description" content="Qusin Flashcard - Ứng dụng học flashcard với quiz, game, ôn tập thông minh">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
-  --r:20px;
+  --r:18px;
   --ease:cubic-bezier(.4,0,.2,1);
   --spring:cubic-bezier(.34,1.56,.64,1);
-  --fs:14px;
+  --safe-b:env(safe-area-inset-bottom,0px);
+  --safe-t:env(safe-area-inset-top,0px);
+  --safe-l:env(safe-area-inset-left,0px);
+  --safe-r:env(safe-area-inset-right,0px);
+  --topbar-h:60px;
+  --bottomnav-h:0px;
 }
 :root[data-theme="dark"]{
   --bg:#07070f;--bg-2:#0e0e1c;
@@ -42,24 +49,27 @@
   --card-back:linear-gradient(145deg,rgba(0,196,140,.14),rgba(0,196,140,.04) 40%,rgba(255,255,255,.6));
 }
 html,body{height:100%}
+html{font-size:16px;-webkit-text-size-adjust:100%}
 body{
   font-family:'Be Vietnam Pro',system-ui,-apple-system,sans-serif;
-  background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;
-  transition:background .5s var(--ease),color .4s var(--ease);line-height:1.5;
+  background:var(--bg);color:var(--text);min-height:100vh;
+  overflow-x:hidden;line-height:1.5;overscroll-behavior-y:none;
+  transition:background .5s var(--ease),color .4s var(--ease);
+  padding-bottom:calc(var(--bottomnav-h) + var(--safe-b));
 }
 ::selection{background:var(--primary);color:#fff}
-::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar{width:8px;height:8px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--surface-3);border-radius:99px;border:3px solid transparent;background-clip:content-box}
+::-webkit-scrollbar-thumb{background:var(--surface-3);border-radius:99px;border:2px solid transparent;background-clip:content-box}
 ::-webkit-scrollbar-thumb:hover{background:var(--primary);background-clip:content-box}
 
-/* BG */
+/* Background */
 .bg-orbs{position:fixed;inset:0;z-index:-2;overflow:hidden;pointer-events:none}
 .orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55;will-change:transform}
 :root[data-theme="light"] .orb{opacity:.35}
-.orb.o1{width:520px;height:520px;background:radial-gradient(circle,#7c5cff,transparent 70%);top:-180px;left:-140px;animation:float1 22s ease-in-out infinite}
-.orb.o2{width:460px;height:460px;background:radial-gradient(circle,#ff5c9d,transparent 70%);bottom:-160px;right:-120px;animation:float2 26s ease-in-out infinite}
-.orb.o3{width:400px;height:400px;background:radial-gradient(circle,#2ee6a8,transparent 70%);top:40%;left:55%;animation:float3 30s ease-in-out infinite}
+.orb.o1{width:min(520px,70vw);height:min(520px,70vw);background:radial-gradient(circle,#7c5cff,transparent 70%);top:-180px;left:-140px;animation:float1 22s ease-in-out infinite}
+.orb.o2{width:min(460px,65vw);height:min(460px,65vw);background:radial-gradient(circle,#ff5c9d,transparent 70%);bottom:-160px;right:-120px;animation:float2 26s ease-in-out infinite}
+.orb.o3{width:min(400px,60vw);height:min(400px,60vw);background:radial-gradient(circle,#2ee6a8,transparent 70%);top:40%;left:55%;animation:float3 30s ease-in-out infinite}
 @keyframes float1{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(120px,80px) scale(1.15)}66%{transform:translate(60px,180px) scale(.9)}}
 @keyframes float2{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(-140px,-90px) scale(1.1)}66%{transform:translate(-60px,-190px) scale(.95)}}
 @keyframes float3{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-180px,120px) scale(1.2)}}
@@ -70,25 +80,26 @@ body{
   mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 20%,transparent 75%);
   -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 20%,transparent 75%);
 }
-
 #confetti{position:fixed;inset:0;pointer-events:none;z-index:9999}
 
 /* TOPBAR */
 .topbar{
   position:sticky;top:0;z-index:100;
-  display:flex;align-items:center;gap:14px;
-  padding:12px clamp(14px,3vw,32px);
-  background:color-mix(in srgb,var(--bg) 74%,transparent);
+  display:flex;align-items:center;gap:12px;
+  padding:calc(10px + var(--safe-t)) max(14px,var(--safe-l)) 10px max(14px,var(--safe-r));
+  padding-top:calc(10px + var(--safe-t));
+  background:color-mix(in srgb,var(--bg) 78%,transparent);
   backdrop-filter:var(--glass);-webkit-backdrop-filter:var(--glass);
   border-bottom:1px solid var(--border);
+  min-height:var(--topbar-h);
 }
-.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-.4px;cursor:pointer;user-select:none;flex-shrink:0}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;letter-spacing:-.4px;cursor:pointer;user-select:none;flex-shrink:0}
 .logo-mark{
   width:36px;height:36px;border-radius:11px;
   background:linear-gradient(135deg,var(--primary),var(--accent));
   display:grid;place-items:center;font-size:18px;
   box-shadow:0 8px 24px -6px var(--primary);
-  position:relative;overflow:hidden;
+  position:relative;overflow:hidden;flex-shrink:0;
   animation:logoPulse 4s ease-in-out infinite;
 }
 .logo-mark::after{
@@ -99,13 +110,36 @@ body{
 @keyframes shine{0%,60%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
 @keyframes logoPulse{0%,100%{box-shadow:0 8px 24px -6px var(--primary)}50%{box-shadow:0 8px 34px -4px var(--accent)}}
 .logo-text{background:linear-gradient(100deg,var(--text),var(--primary-2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
-.logo-text small{display:block;font-size:9px;font-weight:700;letter-spacing:2.5px;-webkit-text-fill-color:var(--text-faint);color:var(--text-faint);margin-top:3px}
+.logo-text small{display:block;font-size:8.5px;font-weight:700;letter-spacing:2.5px;-webkit-text-fill-color:var(--text-faint);color:var(--text-faint);margin-top:3px}
 
-.nav{display:flex;gap:4px;margin-left:10px;background:var(--surface);border:1px solid var(--border);padding:4px;border-radius:13px;overflow-x:auto;scrollbar-width:none}
-.nav::-webkit-scrollbar{display:none}
+.top-actions{margin-left:auto;display:flex;gap:6px;align-items:center;flex-shrink:0}
+.streak-badge{
+  display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:11px;
+  background:linear-gradient(135deg,rgba(255,197,66,.2),rgba(255,92,157,.15));
+  border:1px solid rgba(255,197,66,.35);
+  font-size:12.5px;font-weight:800;color:var(--warning);
+  cursor:help;transition:transform .3s var(--spring);
+}
+.streak-badge:hover{transform:scale(1.06)}
+.streak-badge .flame{font-size:14px;filter:drop-shadow(0 0 5px var(--warning));animation:flicker 1.5s ease-in-out infinite}
+@keyframes flicker{0%,100%{transform:scale(1) rotate(-2deg)}50%{transform:scale(1.12) rotate(2deg)}}
+
+.icon-btn{
+  width:40px;height:40px;border-radius:11px;border:1px solid var(--border);
+  background:var(--surface);color:var(--text-dim);cursor:pointer;
+  display:grid;place-items:center;transition:all .3s var(--spring);
+  position:relative;overflow:hidden;flex-shrink:0;
+}
+.icon-btn:hover{color:var(--text);border-color:var(--border-2);background:var(--surface-2);transform:translateY(-2px)}
+.icon-btn:active{transform:scale(.9)}
+.icon-btn svg{width:18px;height:18px}
+.icon-btn.on{color:var(--primary);border-color:var(--primary)}
+
+/* DESKTOP NAV (hidden on mobile) */
+.nav{display:flex;gap:4px;margin-left:10px;background:var(--surface);border:1px solid var(--border);padding:4px;border-radius:13px}
 .nav button{
   border:0;background:transparent;color:var(--text-dim);font-family:inherit;
-  font-size:13px;font-weight:600;padding:7px 13px;border-radius:9px;cursor:pointer;
+  font-size:13px;font-weight:600;padding:8px 14px;border-radius:9px;cursor:pointer;
   display:flex;align-items:center;gap:6px;transition:all .3s var(--ease);white-space:nowrap;
 }
 .nav button:hover{color:var(--text);background:var(--surface-2)}
@@ -117,36 +151,45 @@ body{
 }
 .nav button.active .badge-mini{background:rgba(255,255,255,.3)}
 
-.top-actions{margin-left:auto;display:flex;gap:8px;align-items:center;flex-shrink:0}
-.streak-badge{
-  display:flex;align-items:center;gap:6px;padding:7px 12px;border-radius:12px;
-  background:linear-gradient(135deg,rgba(255,197,66,.2),rgba(255,92,157,.15));
-  border:1px solid rgba(255,197,66,.35);
-  font-size:13px;font-weight:800;color:var(--warning);
-  cursor:help;transition:transform .3s var(--spring);
+/* BOTTOM NAV (mobile only) */
+.bottom-nav{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);
+  border-top:1px solid var(--border);
+  padding:8px max(8px,var(--safe-l)) calc(8px + var(--safe-b)) max(8px,var(--safe-r));
+  grid-template-columns:repeat(4,1fr);
+  gap:4px;
 }
-.streak-badge:hover{transform:scale(1.06)}
-.streak-badge .flame{font-size:15px;filter:drop-shadow(0 0 5px var(--warning));animation:flicker 1.5s ease-in-out infinite}
-@keyframes flicker{0%,100%{transform:scale(1) rotate(-2deg)}50%{transform:scale(1.12) rotate(2deg)}}
-
-.icon-btn{
-  width:38px;height:38px;border-radius:11px;border:1px solid var(--border);
-  background:var(--surface);color:var(--text-dim);cursor:pointer;
-  display:grid;place-items:center;transition:all .3s var(--spring);position:relative;overflow:hidden;
+.bottom-nav button{
+  border:0;background:transparent;color:var(--text-dim);
+  font-family:inherit;font-size:10.5px;font-weight:600;
+  padding:8px 4px;border-radius:12px;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  transition:all .3s var(--ease);position:relative;
+  min-height:56px;justify-content:center;
 }
-.icon-btn:hover{color:var(--text);border-color:var(--border-2);background:var(--surface-2);transform:translateY(-2px) scale(1.05)}
-.icon-btn:active{transform:scale(.92)}
-.icon-btn svg{width:17px;height:17px}
-.icon-btn.on{color:var(--primary);border-color:var(--primary)}
+.bottom-nav button svg{width:22px;height:22px;transition:transform .3s var(--spring)}
+.bottom-nav button:active svg{transform:scale(.85)}
+.bottom-nav button.active{color:var(--primary);background:color-mix(in srgb,var(--primary) 12%,transparent)}
+.bottom-nav button.active svg{transform:scale(1.1)}
+.bottom-nav .badge-mini{
+  position:absolute;top:4px;right:calc(50% - 20px);
+  font-size:9px;font-weight:800;background:var(--danger);color:#fff;
+  padding:1px 5px;border-radius:99px;min-width:16px;text-align:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.3);
+}
 
 /* BUTTONS */
 .btn{
-  font-family:inherit;font-weight:600;font-size:13.5px;border:0;cursor:pointer;
-  border-radius:12px;padding:10px 18px;
+  font-family:inherit;font-weight:600;font-size:14px;border:0;cursor:pointer;
+  border-radius:12px;padding:11px 18px;
   display:inline-flex;align-items:center;justify-content:center;gap:7px;
   transition:all .3s var(--spring);position:relative;overflow:hidden;white-space:nowrap;
+  min-height:44px;
 }
-.btn svg{width:15px;height:15px;flex-shrink:0}
+.btn svg{width:16px;height:16px;flex-shrink:0}
 .btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-2));color:#fff;box-shadow:0 10px 26px -10px var(--primary)}
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 32px -10px var(--primary)}
 .btn-ghost{background:var(--surface);color:var(--text);border:1px solid var(--border)}
@@ -156,79 +199,82 @@ body{
 .btn-danger{background:linear-gradient(135deg,var(--danger),#e0355c);color:#fff;box-shadow:0 10px 26px -10px var(--danger)}
 .btn-danger:hover{transform:translateY(-2px)}
 .btn-warning{background:linear-gradient(135deg,var(--warning),#ff9f43);color:#3a2200;box-shadow:0 10px 26px -10px var(--warning)}
-.btn-warning:hover{transform:translateY(-2px)}
 .btn:active{transform:scale(.96)}
 .btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
-.btn.sm{padding:7px 13px;font-size:12.5px;border-radius:10px}
-.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.45);transform:scale(0);animation:rippleAnim .6s ease-out;pointer-events:none}
+.btn.sm{padding:9px 14px;font-size:13px;border-radius:10px;min-height:38px}
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.4);transform:scale(0);animation:rippleAnim .6s ease-out;pointer-events:none}
 @keyframes rippleAnim{to{transform:scale(4);opacity:0}}
 
 /* MAIN */
-main{padding:clamp(20px,3vw,36px) clamp(14px,3vw,32px) 90px;max-width:1440px;margin:0 auto}
+main{
+  padding:clamp(16px,3vw,32px) max(clamp(14px,3vw,28px),var(--safe-l)) 60px max(clamp(14px,3vw,28px),var(--safe-r));
+  max-width:1440px;margin:0 auto;
+}
 .view{display:none}
 .view.active{display:block;animation:viewIn .5s var(--ease) both}
-@keyframes viewIn{from{opacity:0;transform:translateY(20px) scale(.99)}to{opacity:1;transform:none}}
+@keyframes viewIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 
-.hero{text-align:center;padding:20px 0 36px}
+.hero{text-align:center;padding:16px 0 28px}
 .hero h1{
-  font-size:clamp(28px,4.8vw,46px);font-weight:800;letter-spacing:-1.5px;line-height:1.14;
+  font-size:clamp(24px,6vw,44px);font-weight:800;letter-spacing:-1.2px;line-height:1.15;
   background:linear-gradient(100deg,var(--text) 10%,var(--primary-2) 50%,var(--accent) 90%);
   background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
   animation:gradShift 6s ease infinite;
 }
 @keyframes gradShift{0%,100%{background-position:0% center}50%{background-position:100% center}}
-.hero p{color:var(--text-dim);margin-top:12px;font-size:clamp(13.5px,1.5vw,15.5px);max-width:560px;margin-left:auto;margin-right:auto}
+.hero p{color:var(--text-dim);margin-top:10px;font-size:clamp(13px,1.6vw,15px);max-width:560px;margin-left:auto;margin-right:auto;padding:0 8px}
 .hero-badge{
   display:inline-flex;align-items:center;gap:7px;background:var(--surface);
-  border:1px solid var(--border);padding:6px 14px;border-radius:99px;
-  font-size:12px;font-weight:600;color:var(--text-dim);margin-bottom:16px;backdrop-filter:blur(10px);
+  border:1px solid var(--border);padding:6px 13px;border-radius:99px;
+  font-size:11.5px;font-weight:600;color:var(--text-dim);margin-bottom:14px;
 }
 .hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--success);animation:ping 2s infinite}
 @keyframes ping{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--success) 70%,transparent)}70%{box-shadow:0 0 0 9px transparent}100%{box-shadow:0 0 0 0 transparent}}
 
-.section-head{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
-.section-head h2{font-size:19px;font-weight:700;letter-spacing:-.5px;display:flex;align-items:center;gap:9px}
-.section-head .count-pill{font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:99px;background:var(--surface-2);color:var(--text-dim);border:1px solid var(--border)}
-.section-head .spacer{flex:1}
+.section-head{display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.section-head h2{font-size:clamp(16px,2vw,19px);font-weight:700;letter-spacing:-.4px;display:flex;align-items:center;gap:8px}
+.section-head .count-pill{font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;background:var(--surface-2);color:var(--text-dim);border:1px solid var(--border)}
+.section-head .spacer{flex:1;min-width:0}
 
-.search-wrap{position:relative;min-width:180px;flex:1;max-width:300px}
+.search-wrap{position:relative;min-width:160px;flex:1;max-width:100%}
 .search-wrap svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--text-faint);pointer-events:none}
 .search-input{
-  width:100%;font-family:inherit;font-size:13.5px;font-weight:500;
-  padding:10px 14px 10px 38px;border-radius:12px;
+  width:100%;font-family:inherit;font-size:16px;font-weight:500;
+  padding:11px 14px 11px 38px;border-radius:12px;
   background:var(--surface);border:1px solid var(--border);color:var(--text);outline:none;
-  transition:all .3s var(--ease);
+  transition:all .3s var(--ease);min-height:44px;
 }
 .search-input::placeholder{color:var(--text-faint)}
 .search-input:focus{border-color:var(--primary);background:var(--surface-2);box-shadow:0 0 0 4px color-mix(in srgb,var(--primary) 15%,transparent)}
 
 /* DECK GRID */
-.deck-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+.deck-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
 .deck-card{
   position:relative;border-radius:var(--r);background:var(--surface);border:1px solid var(--border);
-  padding:20px;cursor:pointer;overflow:hidden;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  padding:18px;cursor:pointer;overflow:hidden;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
   transition:transform .45s var(--spring),border-color .35s var(--ease),box-shadow .45s var(--ease);
   animation:cardIn .55s var(--ease) both;animation-delay:calc(var(--i,0) * 50ms);
-  display:flex;flex-direction:column;gap:12px;min-height:190px;
+  display:flex;flex-direction:column;gap:12px;min-height:180px;
 }
-@keyframes cardIn{from{opacity:0;transform:translateY(26px) scale(.95)}to{opacity:1;transform:none}}
+@keyframes cardIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
 .deck-card::before{
   content:'';position:absolute;inset:0;border-radius:var(--r);
   background:radial-gradient(500px circle at var(--mx,50%) var(--my,50%),color-mix(in srgb,var(--c1) 18%,transparent),transparent 45%);
   opacity:0;transition:opacity .4s var(--ease);pointer-events:none;
 }
 .deck-card:hover::before{opacity:1}
-.deck-card:hover{transform:translateY(-6px) scale(1.012);border-color:var(--border-2);box-shadow:var(--shadow)}
+.deck-card:active{transform:scale(.98)}
 .deck-accent{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--c1),var(--c2));opacity:.9}
-.deck-top{display:flex;align-items:flex-start;gap:13px}
+.deck-top{display:flex;align-items:flex-start;gap:12px}
 .deck-icon{
-  width:48px;height:48px;border-radius:15px;flex-shrink:0;display:grid;place-items:center;font-size:24px;
+  width:46px;height:46px;border-radius:14px;flex-shrink:0;display:grid;place-items:center;font-size:22px;
   background:linear-gradient(135deg,color-mix(in srgb,var(--c1) 30%,transparent),color-mix(in srgb,var(--c2) 18%,transparent));
   border:1px solid color-mix(in srgb,var(--c1) 35%,transparent);
   transition:transform .5s var(--spring);
 }
-.deck-card:hover .deck-icon{transform:rotate(-8deg) scale(1.08)}
-.deck-title{font-size:15.5px;font-weight:700;letter-spacing:-.3px;line-height:1.3;word-break:break-word}
+.deck-card:hover .deck-icon{transform:rotate(-8deg) scale(1.06)}
+.deck-title{font-size:15px;font-weight:700;letter-spacing:-.3px;line-height:1.3;word-break:break-word}
 .deck-desc{font-size:12.5px;color:var(--text-dim);margin-top:4px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .deck-bottom{margin-top:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .deck-stat{display:flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;color:var(--text-dim)}
@@ -247,49 +293,49 @@ main{padding:clamp(20px,3vw,36px) clamp(14px,3vw,32px) 90px;max-width:1440px;mar
 @keyframes progShine{0%{transform:translateX(-100%)}60%,100%{transform:translateX(200%)}}
 .progress-meta{display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--text-faint);margin-top:6px}
 
-.deck-menu{position:absolute;top:12px;right:12px;display:flex;gap:4px;opacity:0;transform:translateY(-6px);transition:all .3s var(--ease)}
-.deck-card:hover .deck-menu{opacity:1;transform:none}
+.deck-menu{position:absolute;top:10px;right:10px;display:flex;gap:4px;opacity:0;transform:translateY(-6px);transition:all .3s var(--ease)}
+.deck-card:hover .deck-menu,.deck-card:focus-within .deck-menu{opacity:1;transform:none}
 .mini-btn{
-  width:29px;height:29px;border-radius:9px;border:1px solid var(--border);
+  width:32px;height:32px;border-radius:9px;border:1px solid var(--border);
   background:color-mix(in srgb,var(--bg-2) 88%,transparent);backdrop-filter:blur(10px);
   color:var(--text-dim);cursor:pointer;display:grid;place-items:center;
   transition:all .25s var(--spring);
 }
-.mini-btn:hover{color:var(--text);background:var(--surface-3);transform:scale(1.12)}
+.mini-btn:hover{color:var(--text);background:var(--surface-3);transform:scale(1.1)}
 .mini-btn.del:hover{color:var(--danger);border-color:var(--danger)}
-.mini-btn svg{width:13px;height:13px}
+.mini-btn svg{width:14px;height:14px}
 
 /* EMPTY */
 .empty{
-  text-align:center;padding:60px 20px;border-radius:var(--r);
+  text-align:center;padding:50px 20px;border-radius:var(--r);
   border:1.5px dashed var(--border-2);background:var(--surface);
 }
-.empty-emoji{font-size:52px;display:block;margin-bottom:14px;animation:bob 3s ease-in-out infinite}
-@keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-12px) rotate(4deg)}}
-.empty h3{font-size:18px;font-weight:700;margin-bottom:7px}
-.empty p{color:var(--text-dim);font-size:13.5px;margin-bottom:20px}
+.empty-emoji{font-size:48px;display:block;margin-bottom:12px;animation:bob 3s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-10px) rotate(4deg)}}
+.empty h3{font-size:17px;font-weight:700;margin-bottom:6px}
+.empty p{color:var(--text-dim);font-size:13px;margin-bottom:18px}
 
 /* DECK DETAIL */
 .detail-head{
-  display:flex;align-items:center;gap:16px;flex-wrap:wrap;
-  padding:22px;border-radius:var(--r);background:var(--surface);border:1px solid var(--border);
-  margin-bottom:22px;position:relative;overflow:hidden;
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  padding:18px;border-radius:var(--r);background:var(--surface);border:1px solid var(--border);
+  margin-bottom:18px;position:relative;overflow:hidden;
 }
 .detail-head::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--c1),var(--c2))}
-.detail-head .deck-icon{width:58px;height:58px;font-size:29px}
-.detail-info{flex:1;min-width:180px}
-.detail-info h2{font-size:22px;font-weight:800;letter-spacing:-.7px;line-height:1.2}
-.detail-info p{color:var(--text-dim);font-size:13px;margin-top:4px}
+.detail-head .deck-icon{width:52px;height:52px;font-size:26px}
+.detail-info{flex:1;min-width:150px}
+.detail-info h2{font-size:clamp(18px,2.4vw,22px);font-weight:800;letter-spacing:-.5px;line-height:1.2;word-break:break-word}
+.detail-info p{color:var(--text-dim);font-size:12.5px;margin-top:4px;line-height:1.5}
 .detail-actions{display:flex;gap:8px;flex-wrap:wrap}
 
-.action-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:22px}
+.action-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:18px}
 .tile{
-  padding:16px;border-radius:16px;background:var(--surface);border:1px solid var(--border);
+  padding:16px;border-radius:15px;background:var(--surface);border:1px solid var(--border);
   cursor:pointer;transition:all .35s var(--spring);position:relative;overflow:hidden;
-  display:flex;flex-direction:column;gap:8px;
+  display:flex;flex-direction:column;gap:6px;
 }
-.tile:hover{transform:translateY(-4px);border-color:var(--border-2);background:var(--surface-2)}
-.tile .ico{font-size:24px}
+.tile:active{transform:scale(.97)}
+.tile .ico{font-size:22px}
 .tile .t{font-size:14px;font-weight:700;letter-spacing:-.2px}
 .tile .d{font-size:11.5px;color:var(--text-dim);line-height:1.4}
 .tile .arrow{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--text-faint);transition:all .3s var(--ease)}
@@ -302,136 +348,139 @@ main{padding:clamp(20px,3vw,36px) clamp(14px,3vw,32px) 90px;max-width:1440px;mar
 /* CARD LIST */
 .card-list{display:flex;flex-direction:column;gap:10px}
 .card-row{
-  display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:15px;
+  display:flex;align-items:center;gap:12px;padding:13px 15px;border-radius:14px;
   background:var(--surface);border:1px solid var(--border);transition:all .35s var(--ease);
-  animation:cardIn .45s var(--ease) both;animation-delay:calc(var(--i,0) * 35ms);
+  animation:cardIn .45s var(--ease) both;animation-delay:calc(var(--i,0) * 30ms);
 }
-.card-row:hover{border-color:var(--border-2);background:var(--surface-2);transform:translateX(4px)}
+.card-row:hover{border-color:var(--border-2);background:var(--surface-2)}
 .card-row .idx{
   width:28px;height:28px;border-radius:8px;flex-shrink:0;display:grid;place-items:center;
   font-size:11px;font-weight:700;background:var(--surface-3);color:var(--text-dim);
 }
 .card-row .txt{flex:1;min-width:0}
 .card-row .front{font-weight:600;font-size:14px;word-break:break-word;white-space:pre-wrap}
-.card-row .back{font-size:12.5px;color:var(--text-dim);margin-top:3px;word-break:break-word;white-space:pre-wrap}
-.card-row .tools{display:flex;gap:4px;opacity:.35;transition:opacity .3s}
-.card-row:hover .tools{opacity:1}
+.card-row .back{font-size:12.5px;color:var(--text-dim);margin-top:3px;word-break:break-word;white-space:pre-wrap;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.card-row .tools{display:flex;gap:3px;opacity:.4;transition:opacity .3s}
+.card-row:hover .tools,.card-row:focus-within .tools{opacity:1}
 .level-dots{display:flex;gap:3px;flex-shrink:0}
 .level-dots i{width:5px;height:5px;border-radius:50%;background:var(--surface-3);transition:all .3s}
 .level-dots i.on{background:var(--success);box-shadow:0 0 6px var(--success)}
 .star-btn.on{color:var(--warning)!important;opacity:1!important}
 
 /* STUDY */
-.study-wrap{max-width:800px;margin:0 auto}
-.study-top{display:flex;align-items:center;gap:12px;margin-bottom:22px;flex-wrap:wrap}
-.study-top .title{font-weight:700;font-size:14.5px;letter-spacing:-.3px}
-.study-top .counter{font-size:13px;color:var(--text-dim);font-weight:600;margin-left:auto;font-variant-numeric:tabular-nums}
-.study-progress{height:8px;border-radius:99px;background:var(--surface-3);overflow:hidden;margin-bottom:30px;position:relative}
+.study-wrap{max-width:760px;margin:0 auto}
+.study-top{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.study-top .title{font-weight:700;font-size:14px;letter-spacing:-.3px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.study-top .counter{font-size:13px;color:var(--text-dim);font-weight:700;font-variant-numeric:tabular-nums;flex-shrink:0}
+.study-progress{height:8px;border-radius:99px;background:var(--surface-3);overflow:hidden;margin-bottom:22px;position:relative}
 .study-progress .fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--primary),var(--accent));transition:width .55s var(--ease);box-shadow:0 0 16px -2px var(--primary)}
 
-.flashcard{perspective:2000px;width:100%;height:clamp(320px,48vh,430px);margin-bottom:28px;cursor:pointer}
+.flashcard{
+  perspective:2000px;width:100%;
+  height:clamp(300px,50vh,440px);
+  margin-bottom:22px;cursor:pointer;touch-action:manipulation;
+}
 .flashcard-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .85s var(--ease)}
 .flashcard.flipped .flashcard-inner{transform:rotateY(180deg)}
 .face{
-  position:absolute;inset:0;border-radius:26px;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  position:absolute;inset:0;border-radius:22px;backface-visibility:hidden;-webkit-backface-visibility:hidden;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:clamp(24px,5vw,52px);border:1px solid var(--border-2);box-shadow:var(--shadow);overflow:hidden;
+  padding:clamp(20px,5vw,48px);border:1px solid var(--border-2);box-shadow:var(--shadow);overflow:hidden;
 }
 .face-front{background:var(--card-front);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);transition:box-shadow .5s var(--ease)}
 .face-back{background:var(--card-back);transform:rotateY(180deg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
 .face::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(255,255,255,.10),transparent 60%);pointer-events:none}
 .face-label{
-  position:absolute;top:18px;left:22px;font-size:10px;font-weight:800;
-  letter-spacing:2.2px;text-transform:uppercase;color:var(--text-faint);
+  position:absolute;top:16px;left:20px;font-size:10px;font-weight:800;
+  letter-spacing:2px;text-transform:uppercase;color:var(--text-faint);
 }
 .face-content{
-  font-size:clamp(19px,3.2vw,30px);font-weight:700;letter-spacing:-.6px;text-align:center;
+  font-size:clamp(18px,4vw,28px);font-weight:700;letter-spacing:-.5px;text-align:center;
   line-height:1.4;white-space:pre-wrap;word-break:break-word;max-height:100%;overflow-y:auto;width:100%;
 }
-.face-back .face-content{font-size:clamp(17px,2.8vw,25px);font-weight:600}
+.face-back .face-content{font-size:clamp(16px,3.4vw,24px);font-weight:600}
 .face-hint{
-  position:absolute;bottom:20px;left:0;right:0;text-align:center;
-  font-size:11px;font-weight:600;color:var(--text-faint);
-  display:flex;align-items:center;justify-content:center;gap:6px;
+  position:absolute;bottom:16px;left:0;right:0;text-align:center;
+  font-size:10.5px;font-weight:600;color:var(--text-faint);
+  display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;padding:0 12px;
 }
 .face-hint kbd{
-  font-family:inherit;font-size:10.5px;font-weight:700;padding:2px 6px;
-  border-radius:6px;background:var(--surface-3);border:1px solid var(--border);color:var(--text-dim);
+  font-family:inherit;font-size:10px;font-weight:700;padding:2px 6px;
+  border-radius:5px;background:var(--surface-3);border:1px solid var(--border);color:var(--text-dim);
 }
-.flashcard:not(.flipped):hover .face-front{box-shadow:0 30px 70px -20px var(--primary)}
 
-.study-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;min-height:52px;align-items:center}
-.study-actions .btn{padding:13px 30px;font-size:14.5px;border-radius:14px}
-.action-group{display:flex;gap:12px;animation:popIn .45s var(--spring) both}
-@keyframes popIn{from{opacity:0;transform:scale(.85) translateY(12px)}to{opacity:1;transform:none}}
+.study-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;min-height:52px;align-items:center}
+.study-actions .btn{padding:13px 26px;font-size:14.5px;border-radius:14px;flex:1;max-width:240px}
+.action-group{display:flex;gap:10px;width:100%;max-width:520px;margin:0 auto;animation:popIn .45s var(--spring) both}
+.action-group .btn{flex:1}
+@keyframes popIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:none}}
 .shake{animation:shake .5s var(--ease)}
-@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-12px) rotate(-1.5deg)}40%{transform:translateX(12px) rotate(1.5deg)}60%{transform:translateX(-8px)}80%{transform:translateX(8px)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-10px)}40%{transform:translateX(10px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
 .pulse-ok{animation:pulseOk .6s var(--spring)}
-@keyframes pulseOk{0%{transform:scale(1)}40%{transform:scale(1.035)}100%{transform:scale(1)}}
+@keyframes pulseOk{0%{transform:scale(1)}40%{transform:scale(1.03)}100%{transform:scale(1)}}
 
-.study-foot{margin-top:30px;text-align:center;color:var(--text-faint);font-size:11.5px;font-weight:500;display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
-.study-foot span{display:flex;align-items:center;gap:5px}
+.study-foot{margin-top:22px;text-align:center;color:var(--text-faint);font-size:11px;font-weight:500;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;padding:0 8px}
+.study-foot span{display:flex;align-items:center;gap:4px}
 .study-foot kbd{
-  font-family:inherit;background:var(--surface-3);padding:2px 7px;border-radius:6px;
-  border:1px solid var(--border);font-size:11px;
+  font-family:inherit;background:var(--surface-3);padding:2px 6px;border-radius:5px;
+  border:1px solid var(--border);font-size:10.5px;
 }
 
 /* QUIZ */
-.quiz-wrap{max-width:760px;margin:0 auto}
-.quiz-head{display:flex;align-items:center;gap:12px;margin-bottom:22px;flex-wrap:wrap}
-.quiz-head .title{font-weight:700;font-size:14.5px}
+.quiz-wrap{max-width:720px;margin:0 auto}
+.quiz-head{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.quiz-head .title{font-weight:700;font-size:14px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .quiz-head .timer{
-  display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:10px;
+  display:flex;align-items:center;gap:5px;padding:6px 11px;border-radius:10px;
   background:var(--surface);border:1px solid var(--border);
-  font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;
+  font-size:12.5px;font-weight:700;font-variant-numeric:tabular-nums;flex-shrink:0;
 }
 .quiz-head .timer.warn{color:var(--danger);border-color:var(--danger);animation:pulseWarn 1s infinite}
 @keyframes pulseWarn{0%,100%{background:var(--surface)}50%{background:color-mix(in srgb,var(--danger) 18%,var(--surface))}}
-.quiz-head .counter{font-size:13px;color:var(--text-dim);font-weight:600;margin-left:auto;font-variant-numeric:tabular-nums}
+.quiz-head .counter{font-size:13px;color:var(--text-dim);font-weight:700;font-variant-numeric:tabular-nums;flex-shrink:0}
 
 .quiz-question{
-  padding:28px 24px;border-radius:22px;
+  padding:24px 20px;border-radius:20px;
   background:var(--card-front);border:1px solid var(--border-2);
   backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  margin-bottom:22px;min-height:130px;
+  margin-bottom:18px;min-height:120px;
   display:flex;flex-direction:column;justify-content:center;
   box-shadow:var(--shadow);position:relative;overflow:hidden;
   animation:cardIn .5s var(--ease) both;
 }
 .quiz-question .q-label{
-  position:absolute;top:14px;left:20px;font-size:10px;font-weight:800;
-  letter-spacing:2.2px;color:var(--text-faint);text-transform:uppercase;
+  position:absolute;top:12px;left:18px;font-size:10px;font-weight:800;
+  letter-spacing:2px;color:var(--text-faint);text-transform:uppercase;
 }
 .quiz-question .q-text{
-  font-size:clamp(18px,2.8vw,25px);font-weight:700;letter-spacing:-.5px;
-  line-height:1.4;white-space:pre-wrap;word-break:break-word;text-align:center;padding-top:10px;
+  font-size:clamp(17px,3.4vw,23px);font-weight:700;letter-spacing:-.4px;
+  line-height:1.4;white-space:pre-wrap;word-break:break-word;text-align:center;padding:8px 0;
 }
 .quiz-question .q-speak{
-  position:absolute;bottom:14px;right:16px;
+  position:absolute;bottom:12px;right:14px;
   background:var(--surface-2);border:1px solid var(--border);
-  color:var(--text-dim);width:36px;height:36px;border-radius:50%;
+  color:var(--text-dim);width:40px;height:40px;border-radius:50%;
   display:grid;place-items:center;cursor:pointer;transition:all .3s var(--spring);
 }
-.quiz-question .q-speak:hover{color:var(--primary);border-color:var(--primary);transform:scale(1.1)}
-.quiz-question .q-speak svg{width:16px;height:16px}
+.quiz-question .q-speak:hover{color:var(--primary);border-color:var(--primary);transform:scale(1.08)}
+.quiz-question .q-speak svg{width:17px;height:17px}
 
-.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
 .quiz-option{
-  padding:16px 18px;border-radius:15px;
+  padding:14px 16px;border-radius:14px;
   background:var(--surface);border:1.5px solid var(--border);
   cursor:pointer;text-align:left;color:var(--text);
   font-family:inherit;font-size:14px;font-weight:600;line-height:1.4;
-  transition:all .3s var(--spring);position:relative;
-  display:flex;align-items:center;gap:12px;
-  min-height:64px;word-break:break-word;
+  transition:all .25s var(--spring);position:relative;
+  display:flex;align-items:center;gap:10px;
+  min-height:60px;word-break:break-word;touch-action:manipulation;
 }
 .quiz-option .key{
   width:26px;height:26px;border-radius:8px;flex-shrink:0;
   display:grid;place-items:center;font-size:11.5px;font-weight:800;
   background:var(--surface-3);color:var(--text-dim);
 }
-.quiz-option:hover:not(.disabled){transform:translateY(-3px);border-color:var(--primary);background:var(--surface-2)}
-.quiz-option:hover:not(.disabled) .key{background:var(--primary);color:#fff}
+.quiz-option:active:not(.disabled){transform:scale(.97)}
 .quiz-option.correct{border-color:var(--success);background:color-mix(in srgb,var(--success) 15%,var(--surface));animation:pulseOk .5s}
 .quiz-option.correct .key{background:var(--success);color:#04231a}
 .quiz-option.wrong{border-color:var(--danger);background:color-mix(in srgb,var(--danger) 15%,var(--surface));animation:shake .5s}
@@ -440,112 +489,109 @@ main{padding:clamp(20px,3vw,36px) clamp(14px,3vw,32px) 90px;max-width:1440px;mar
 .quiz-option.dim{opacity:.35}
 
 .type-input{
-  width:100%;font-family:inherit;font-size:17px;font-weight:600;
-  padding:16px 20px;border-radius:15px;
+  width:100%;font-family:inherit;font-size:16px;font-weight:600;
+  padding:16px 20px;border-radius:14px;
   background:var(--surface);border:1.5px solid var(--border);color:var(--text);
-  outline:none;transition:all .3s var(--ease);text-align:center;
+  outline:none;transition:all .3s var(--ease);text-align:center;min-height:56px;
 }
 .type-input:focus{border-color:var(--primary);box-shadow:0 0 0 4px color-mix(in srgb,var(--primary) 15%,transparent)}
 .type-input.correct{border-color:var(--success);background:color-mix(in srgb,var(--success) 12%,var(--surface))}
 .type-input.wrong{border-color:var(--danger);background:color-mix(in srgb,var(--danger) 12%,var(--surface));animation:shake .5s}
 .type-answer-box{
-  padding:14px 18px;border-radius:13px;margin-top:12px;
+  padding:13px 16px;border-radius:12px;margin-top:10px;
   background:color-mix(in srgb,var(--success) 12%,var(--surface));
-  border:1px solid var(--success);font-size:14px;line-height:1.5;
-  animation:popIn .4s var(--spring);
+  border:1px solid var(--success);font-size:13.5px;line-height:1.5;
+  animation:popIn .4s var(--spring);word-break:break-word;
 }
-.type-answer-box .lbl{font-size:11px;font-weight:800;color:var(--success);letter-spacing:1.5px;margin-bottom:4px}
+.type-answer-box .lbl{font-size:10.5px;font-weight:800;color:var(--success);letter-spacing:1.5px;margin-bottom:4px}
 
 /* MATCH GAME */
-.match-wrap{max-width:900px;margin:0 auto}
-.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-bottom:22px}
-.match-col{display:flex;flex-direction:column;gap:10px}
+.match-wrap{max-width:860px;margin:0 auto}
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+.match-col{display:flex;flex-direction:column;gap:8px}
 .match-item{
-  padding:14px 16px;border-radius:13px;
+  padding:13px 14px;border-radius:12px;
   background:var(--surface);border:1.5px solid var(--border);
-  cursor:pointer;transition:all .3s var(--spring);
-  font-size:13.5px;font-weight:600;line-height:1.4;
-  word-break:break-word;min-height:56px;
-  display:flex;align-items:center;
-  animation:cardIn .4s var(--ease) both;animation-delay:calc(var(--i,0)*40ms);
+  cursor:pointer;transition:all .25s var(--spring);
+  font-size:13px;font-weight:600;line-height:1.4;
+  word-break:break-word;min-height:54px;
+  display:flex;align-items:center;touch-action:manipulation;
+  animation:cardIn .4s var(--ease) both;animation-delay:calc(var(--i,0)*30ms);
 }
-.match-item:hover:not(.matched){transform:translateY(-2px);border-color:var(--primary);background:var(--surface-2)}
+.match-item:active:not(.matched){transform:scale(.97)}
 .match-item.selected{border-color:var(--primary);background:color-mix(in srgb,var(--primary) 15%,var(--surface));box-shadow:0 0 0 4px color-mix(in srgb,var(--primary) 15%,transparent)}
 .match-item.matched{opacity:.35;pointer-events:none;border-color:var(--success);background:color-mix(in srgb,var(--success) 15%,var(--surface));animation:pulseOk .6s}
 .match-item.wrong{animation:shake .5s;border-color:var(--danger)}
-.match-item.done{pointer-events:none}
 
 /* TODAY */
-.today-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-bottom:22px}
+.today-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-bottom:18px}
 .today-card{
-  padding:20px;border-radius:var(--r);background:var(--surface);border:1px solid var(--border);
+  padding:18px;border-radius:var(--r);background:var(--surface);border:1px solid var(--border);
   position:relative;overflow:hidden;transition:all .35s var(--spring);
   animation:cardIn .5s var(--ease) both;animation-delay:calc(var(--i,0)*50ms);
 }
-.today-card:hover{transform:translateY(-4px);border-color:var(--border-2)}
+.today-card:active{transform:scale(.98)}
 .today-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--c1),var(--c2))}
-.today-card .row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.today-card .due-count{font-size:32px;font-weight:800;letter-spacing:-1.5px;color:var(--warning);line-height:1}
+.today-card .row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.today-card .due-count{font-size:30px;font-weight:800;letter-spacing:-1.4px;color:var(--warning);line-height:1}
 .today-card .due-lbl{font-size:11.5px;color:var(--text-dim);font-weight:600}
-.today-card .title{font-size:15px;font-weight:700;flex:1;min-width:0;letter-spacing:-.2px;word-break:break-word}
+.today-card .title{font-size:14.5px;font-weight:700;flex:1;min-width:0;letter-spacing:-.2px;word-break:break-word}
 
 /* STATS */
-.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:26px}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:22px}
 .stat-box{
-  padding:20px;border-radius:var(--r);background:var(--surface);border:1px solid var(--border);
+  padding:18px;border-radius:var(--r);background:var(--surface);border:1px solid var(--border);
   position:relative;overflow:hidden;animation:cardIn .5s var(--ease) both;
-  animation-delay:calc(var(--i,0)*50ms);transition:transform .4s var(--spring),border-color .3s;
+  animation-delay:calc(var(--i,0)*40ms);transition:transform .4s var(--spring),border-color .3s;
 }
-.stat-box:hover{transform:translateY(-4px);border-color:var(--border-2)}
+.stat-box:active{transform:scale(.98)}
 .stat-box .glow{position:absolute;top:-40px;right:-40px;width:110px;height:110px;border-radius:50%;filter:blur(40px);opacity:.5}
-.stat-box .ico{font-size:20px;margin-bottom:10px;display:block}
-.stat-box .v{font-size:28px;font-weight:800;letter-spacing:-1.3px;line-height:1;font-variant-numeric:tabular-nums}
-.stat-box .l{font-size:11.5px;font-weight:600;color:var(--text-dim);margin-top:6px}
+.stat-box .ico{font-size:19px;margin-bottom:9px;display:block}
+.stat-box .v{font-size:26px;font-weight:800;letter-spacing:-1.2px;line-height:1;font-variant-numeric:tabular-nums}
+.stat-box .l{font-size:11px;font-weight:600;color:var(--text-dim);margin-top:6px;letter-spacing:.3px}
 
 .heatmap{
-  padding:20px;border-radius:var(--r);background:var(--surface);border:1px solid var(--border);
-  margin-bottom:22px;overflow-x:auto;
+  padding:16px;border-radius:var(--r);background:var(--surface);border:1px solid var(--border);
+  margin-bottom:18px;overflow-x:auto;-webkit-overflow-scrolling:touch;
 }
-.heatmap-grid{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,12px);gap:3px;min-width:max-content}
+.heatmap-grid{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,11px);gap:3px;min-width:max-content}
 .heat-cell{
-  width:12px;height:12px;border-radius:3px;background:var(--surface-3);
-  transition:transform .2s;cursor:pointer;
+  width:11px;height:11px;border-radius:2.5px;background:var(--surface-3);
+  transition:transform .2s;
 }
-.heat-cell:hover{transform:scale(1.4)}
 .heat-cell.l1{background:color-mix(in srgb,var(--success) 25%,var(--surface-3))}
 .heat-cell.l2{background:color-mix(in srgb,var(--success) 50%,var(--surface-3))}
 .heat-cell.l3{background:color-mix(in srgb,var(--success) 75%,var(--surface-3))}
 .heat-cell.l4{background:var(--success);box-shadow:0 0 6px -1px var(--success)}
-.heat-legend{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--text-dim);margin-top:12px}
-.heat-legend .swatch{width:12px;height:12px;border-radius:3px}
+.heat-legend{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-dim);margin-top:10px;flex-wrap:wrap}
+.heat-legend .swatch{width:11px;height:11px;border-radius:2.5px}
 
-.bar-list{display:flex;flex-direction:column;gap:14px}
+.bar-list{display:flex;flex-direction:column;gap:12px}
 .bar-item{
-  padding:16px 18px;border-radius:15px;background:var(--surface);border:1px solid var(--border);
-  animation:cardIn .5s var(--ease) both;animation-delay:calc(var(--i,0)*50ms);
+  padding:14px 16px;border-radius:14px;background:var(--surface);border:1px solid var(--border);
+  animation:cardIn .5s var(--ease) both;animation-delay:calc(var(--i,0)*40ms);
 }
-.bar-item .top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.bar-item .name{font-weight:700;font-size:13.5px;flex:1;letter-spacing:-.2px}
-.bar-item .pct{font-size:12.5px;font-weight:700;color:var(--text-dim);font-variant-numeric:tabular-nums}
-.bar-item .emoji{font-size:17px}
+.bar-item .top{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.bar-item .name{font-weight:700;font-size:13px;flex:1;letter-spacing:-.2px;word-break:break-word}
+.bar-item .pct{font-size:12px;font-weight:700;color:var(--text-dim);font-variant-numeric:tabular-nums;flex-shrink:0}
+.bar-item .emoji{font-size:17px;flex-shrink:0}
 
 /* TRASH */
 .trash-list{display:flex;flex-direction:column;gap:10px}
 .trash-item{
-  display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:15px;
+  display:flex;align-items:center;gap:12px;padding:14px;border-radius:14px;
   background:var(--surface);border:1px solid var(--border);
-  opacity:.85;transition:all .3s var(--ease);
+  opacity:.85;transition:all .3s var(--ease);flex-wrap:wrap;
 }
-.trash-item:hover{opacity:1;border-color:var(--border-2)}
-.trash-item .ico{font-size:22px;width:40px;height:40px;border-radius:11px;background:var(--surface-3);display:grid;place-items:center;flex-shrink:0}
-.trash-item .info{flex:1;min-width:0}
-.trash-item .name{font-weight:700;font-size:14px;word-break:break-word}
+.trash-item .ico{font-size:20px;width:40px;height:40px;border-radius:11px;background:var(--surface-3);display:grid;place-items:center;flex-shrink:0}
+.trash-item .info{flex:1;min-width:140px}
+.trash-item .name{font-weight:700;font-size:13.5px;word-break:break-word}
 .trash-item .meta{font-size:11.5px;color:var(--text-dim);margin-top:2px}
 .trash-item .actions{display:flex;gap:6px;flex-shrink:0}
 
 /* RESULT */
-.result{text-align:center;max-width:560px;margin:30px auto}
-.result-ring{width:160px;height:160px;margin:0 auto 24px;position:relative}
+.result{text-align:center;max-width:520px;margin:20px auto;padding:0 8px}
+.result-ring{width:150px;height:150px;margin:0 auto 22px;position:relative}
 .result-ring svg{transform:rotate(-90deg);width:100%;height:100%}
 .result-ring .track{fill:none;stroke:var(--surface-3);stroke-width:11}
 .result-ring .bar{
@@ -554,89 +600,224 @@ main{padding:clamp(20px,3vw,36px) clamp(14px,3vw,32px) 90px;max-width:1440px;mar
 }
 .result-ring .pct{
   position:absolute;inset:0;display:grid;place-items:center;
-  font-size:38px;font-weight:800;letter-spacing:-2px;
+  font-size:36px;font-weight:800;letter-spacing:-2px;
   background:linear-gradient(135deg,var(--primary),var(--accent));
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
 }
-.result h2{font-size:25px;font-weight:800;letter-spacing:-.8px;margin-bottom:9px}
-.result p{color:var(--text-dim);font-size:14px;margin-bottom:24px}
-.result-stats{display:flex;gap:12px;justify-content:center;margin-bottom:26px;flex-wrap:wrap}
-.rs{flex:1;min-width:110px;padding:16px 12px;border-radius:15px;background:var(--surface);border:1px solid var(--border)}
-.rs .v{font-size:24px;font-weight:800;letter-spacing:-1px}
-.rs .l{font-size:11px;font-weight:600;color:var(--text-dim);margin-top:3px;letter-spacing:.4px}
+.result h2{font-size:clamp(20px,4vw,25px);font-weight:800;letter-spacing:-.7px;margin-bottom:8px}
+.result p{color:var(--text-dim);font-size:13.5px;margin-bottom:20px}
+.result-stats{display:flex;gap:10px;justify-content:center;margin-bottom:22px;flex-wrap:wrap}
+.rs{flex:1;min-width:100px;padding:14px 10px;border-radius:14px;background:var(--surface);border:1px solid var(--border)}
+.rs .v{font-size:22px;font-weight:800;letter-spacing:-1px}
+.rs .l{font-size:10.5px;font-weight:600;color:var(--text-dim);margin-top:3px;letter-spacing:.3px}
 .rs.good .v{color:var(--success)}
 .rs.bad .v{color:var(--danger)}
 .result-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 
-/* MODAL */
+/* MODAL — bottom sheet on mobile */
 .overlay{
   position:fixed;inset:0;z-index:500;background:rgba(3,3,12,.72);
   backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);
-  display:grid;place-items:center;padding:20px;animation:fadeIn .3s var(--ease) both;
+  display:flex;align-items:center;justify-content:center;padding:20px;
+  animation:fadeIn .3s var(--ease) both;
 }
 :root[data-theme="light"] .overlay{background:rgba(40,30,90,.42)}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .overlay.closing{animation:fadeOut .25s var(--ease) both}
 @keyframes fadeOut{to{opacity:0}}
 .modal{
-  width:100%;max-width:540px;max-height:88vh;overflow-y:auto;
-  background:var(--bg-2);border:1px solid var(--border-2);border-radius:22px;padding:26px;
+  width:100%;max-width:520px;max-height:88vh;overflow-y:auto;
+  background:var(--bg-2);border:1px solid var(--border-2);border-radius:22px;padding:24px;
   box-shadow:0 40px 100px -20px rgba(0,0,0,.9);animation:modalIn .45s var(--spring) both;
+  -webkit-overflow-scrolling:touch;
 }
 .overlay.closing .modal{animation:modalOut .25s var(--ease) both}
 @keyframes modalIn{from{opacity:0;transform:scale(.9) translateY(30px)}to{opacity:1;transform:none}}
 @keyframes modalOut{to{opacity:0;transform:scale(.94) translateY(16px)}}
-.modal h3{font-size:19px;font-weight:800;letter-spacing:-.5px;margin-bottom:20px;display:flex;align-items:center;gap:9px}
+.modal h3{font-size:18px;font-weight:800;letter-spacing:-.4px;margin-bottom:18px;display:flex;align-items:center;gap:8px}
 .modal .desc{color:var(--text-dim);font-size:13.5px;line-height:1.6;margin-bottom:16px}
-.field{margin-bottom:16px}
+.field{margin-bottom:14px}
 .field label{display:block;font-size:12px;font-weight:700;color:var(--text-dim);margin-bottom:7px;letter-spacing:.2px}
 .input,.textarea,select.input{
-  width:100%;font-family:inherit;font-size:14px;font-weight:500;
-  padding:12px 15px;border-radius:12px;background:var(--surface);border:1px solid var(--border);
-  color:var(--text);outline:none;transition:all .3s var(--ease);resize:vertical;
+  width:100%;font-family:inherit;font-size:16px;font-weight:500;
+  padding:12px 14px;border-radius:12px;background:var(--surface);border:1px solid var(--border);
+  color:var(--text);outline:none;transition:all .3s var(--ease);resize:vertical;min-height:46px;
 }
 .input:focus,.textarea:focus,select.input:focus{border-color:var(--primary);box-shadow:0 0 0 4px color-mix(in srgb,var(--primary) 15%,transparent)}
-.textarea{min-height:90px;line-height:1.55;font-family:inherit}
+.textarea{min-height:100px;line-height:1.55;font-family:inherit}
 .emoji-picker{display:flex;gap:6px;flex-wrap:wrap}
 .emoji-opt{
-  width:40px;height:40px;border-radius:11px;font-size:19px;
+  width:42px;height:42px;border-radius:11px;font-size:19px;
   background:var(--surface);border:1.5px solid var(--border);cursor:pointer;
   display:grid;place-items:center;transition:all .28s var(--spring);
 }
-.emoji-opt:hover{transform:scale(1.12) rotate(-6deg)}
+.emoji-opt:active{transform:scale(.92)}
 .emoji-opt.sel{border-color:var(--primary);background:color-mix(in srgb,var(--primary) 18%,transparent);box-shadow:0 0 0 4px color-mix(in srgb,var(--primary) 12%,transparent)}
 .color-picker{display:flex;gap:8px;flex-wrap:wrap}
-.color-opt{width:34px;height:34px;border-radius:10px;cursor:pointer;border:2.5px solid transparent;transition:all .28s var(--spring)}
-.color-opt:hover{transform:scale(1.12)}
+.color-opt{width:36px;height:36px;border-radius:10px;cursor:pointer;border:2.5px solid transparent;transition:all .28s var(--spring)}
+.color-opt:active{transform:scale(.92)}
 .color-opt.sel{border-color:var(--text);transform:scale(1.08)}
-.modal-actions{display:flex;gap:10px;margin-top:22px}
+.modal-actions{display:flex;gap:10px;margin-top:20px}
 .modal-actions .btn{flex:1}
-.tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--border);padding:4px;border-radius:11px;margin-bottom:18px}
+.tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--border);padding:4px;border-radius:11px;margin-bottom:16px}
 .tabs button{
   flex:1;border:0;background:transparent;color:var(--text-dim);
-  font-family:inherit;font-size:12.5px;font-weight:600;padding:8px 10px;border-radius:8px;cursor:pointer;
-  transition:all .3s var(--ease);
+  font-family:inherit;font-size:12.5px;font-weight:600;padding:9px 8px;border-radius:8px;cursor:pointer;
+  transition:all .3s var(--ease);min-height:40px;
 }
 .tabs button.active{color:#fff;background:linear-gradient(135deg,var(--primary),var(--primary-2))}
 
 /* TOAST */
 #toast-root{
-  position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:9000;
+  position:fixed;bottom:calc(20px + var(--bottomnav-h) + var(--safe-b));left:50%;transform:translateX(-50%);z-index:9000;
   display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;
-  width:max-content;max-width:92vw;
+  width:max-content;max-width:calc(92vw - var(--safe-l) - var(--safe-r));
 }
 .toast{
-  padding:12px 20px;border-radius:13px;background:var(--bg-2);border:1px solid var(--border-2);
+  padding:12px 18px;border-radius:13px;background:var(--bg-2);border:1px solid var(--border-2);
   box-shadow:0 18px 50px -12px rgba(0,0,0,.7);
   font-size:13px;font-weight:600;display:flex;align-items:center;gap:9px;
-  animation:toastIn .45s var(--spring) both;
+  animation:toastIn .45s var(--spring) both;max-width:100%;
 }
 .toast.out{animation:toastOut .3s var(--ease) both}
 @keyframes toastIn{from{opacity:0;transform:translateY(24px) scale(.9)}to{opacity:1;transform:none}}
 @keyframes toastOut{to{opacity:0;transform:translateY(-14px) scale(.95)}}
 .toast .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 
-/* PRINT */
+/* ============ RESPONSIVE ============ */
+
+/* TABLET */
+@media (max-width: 1024px) {
+  .nav button .nav-label{display:none}
+  .nav button{padding:9px 11px}
+}
+
+/* SMALL TABLET / LARGE PHONE — switch to bottom nav */
+@media (max-width: 820px) {
+  :root{--bottomnav-h:64px}
+  .nav{display:none}
+  .bottom-nav{display:grid}
+  .logo-text{font-size:16px}
+  .logo-text small{font-size:8px;letter-spacing:2px}
+  .top-actions .icon-btn{width:38px;height:38px}
+  .streak-badge{padding:6px 10px;font-size:12px}
+  .streak-badge .streak-text{display:none}
+  main{padding-bottom:40px}
+  .deck-grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+}
+
+/* MOBILE */
+@media (max-width: 640px) {
+  .logo-text{display:none}
+  .logo-mark{width:34px;height:34px}
+  .topbar{gap:8px;padding-top:calc(8px + var(--safe-t));padding-bottom:8px;min-height:56px}
+  .top-actions{gap:6px}
+  .icon-btn{width:38px;height:38px}
+  .icon-btn svg{width:17px;height:17px}
+
+  .deck-grid{grid-template-columns:1fr;gap:12px}
+  .deck-card{padding:16px;min-height:auto}
+  .deck-card .deck-menu{opacity:1;transform:none}
+
+  .detail-head{padding:16px;gap:12px}
+  .detail-head .deck-icon{width:46px;height:46px;font-size:24px}
+  .detail-actions{width:100%;gap:6px}
+  .detail-actions .btn{flex:1;padding:10px 12px;font-size:13px}
+
+  .action-tiles{grid-template-columns:1fr 1fr;gap:8px}
+  .tile{padding:13px}
+  .tile .ico{font-size:20px}
+  .tile .t{font-size:13px}
+  .tile .d{font-size:11px}
+  .tile .arrow{display:none}
+
+  .card-row{padding:12px;gap:10px}
+  .card-row .idx{width:24px;height:24px;font-size:10.5px}
+  .card-row .front{font-size:13.5px}
+  .card-row .tools{opacity:1}
+  .card-row .level-dots{display:none}
+  .mini-btn{width:34px;height:34px}
+  .mini-btn svg{width:14px;height:14px}
+
+  .flashcard{height:clamp(280px,45vh,380px);margin-bottom:18px}
+  .face{border-radius:18px;padding:24px 18px}
+  .face-label{top:12px;left:16px;font-size:9.5px}
+  .face-hint{bottom:12px;font-size:10px}
+  .face-hint kbd{display:none}
+
+  .study-actions .btn{padding:13px 18px;font-size:14px;flex:1;max-width:none}
+  .study-foot{margin-top:16px;gap:10px}
+
+  .quiz-options{grid-template-columns:1fr;gap:8px}
+  .quiz-option{padding:13px 14px;font-size:13.5px;min-height:56px}
+
+  .match-grid{grid-template-columns:1fr;gap:14px}
+  .match-col{gap:6px}
+  .match-item{padding:12px;font-size:12.5px;min-height:50px}
+
+  .stat-grid{grid-template-columns:1fr 1fr;gap:10px}
+  .stat-box{padding:15px}
+  .stat-box .v{font-size:22px}
+  .stat-box .ico{font-size:17px}
+
+  .today-grid{grid-template-columns:1fr;gap:12px}
+
+  .trash-item{padding:12px;gap:10px}
+  .trash-item .ico{width:36px;height:36px;font-size:18px}
+  .trash-item .actions{width:100%;gap:6px}
+  .trash-item .actions .btn{flex:1;font-size:12.5px;padding:8px 10px}
+
+  .section-head{gap:8px;margin-bottom:14px}
+  .section-head h2{font-size:15.5px}
+  .section-head .search-wrap{order:3;flex-basis:100%;max-width:100%;margin-top:4px}
+  .section-head .spacer{display:none}
+
+  /* MODAL — BOTTOM SHEET */
+  .overlay{
+    align-items:flex-end;padding:0;
+  }
+  .modal{
+    max-width:100%;max-height:92vh;border-radius:22px 22px 0 0;
+    padding:20px 18px calc(20px + var(--safe-b));
+    animation:sheetIn .4s var(--spring) both;
+  }
+  .overlay.closing .modal{animation:sheetOut .25s var(--ease) both}
+  @keyframes sheetIn{from{opacity:0;transform:translateY(100%)}to{opacity:1;transform:none}}
+  @keyframes sheetOut{to{opacity:0;transform:translateY(100%)}}
+  .modal::before{
+    content:'';position:absolute;top:8px;left:50%;transform:translateX(-50%);
+    width:40px;height:4px;border-radius:99px;background:var(--surface-3);
+  }
+  .modal h3{font-size:17px;margin-top:6px}
+  .modal-actions{position:sticky;bottom:0;background:var(--bg-2);padding-top:12px;margin-top:16px}
+
+  /* Bottom nav bigger tap */
+  .bottom-nav button{min-height:56px;font-size:10.5px}
+  .bottom-nav button svg{width:22px;height:22px}
+}
+
+/* TINY */
+@media (max-width: 380px) {
+  .action-tiles{grid-template-columns:1fr}
+  .stat-grid{grid-template-columns:1fr}
+  .hero h1{font-size:22px}
+  .logo-text{display:none}
+}
+
+/* LANDSCAPE PHONE */
+@media (max-width: 820px) and (orientation: landscape) {
+  .flashcard{height:clamp(220px,65vh,320px)}
+  .hero{padding:8px 0 20px}
+  .hero h1{font-size:22px}
+  .hero p{font-size:12.5px}
+}
+
+/* Prevent zoom on input focus on iOS */
+@supports (-webkit-touch-callout: none) {
+  input, textarea, select { font-size: 16px !important; }
+}
+
+/* Print */
 @media print{
   body *{visibility:hidden!important;background:transparent!important}
   #view-deck, #view-deck *{visibility:visible!important;color:#000!important}
@@ -644,30 +825,8 @@ main{padding:clamp(20px,3vw,36px) clamp(14px,3vw,32px) 90px;max-width:1440px;mar
   .no-print{display:none!important}
   .card-row{border:1px solid #999!important;page-break-inside:avoid;background:#fff!important;box-shadow:none!important}
   .detail-head{background:#fff!important;border:1px solid #999!important}
-  .card-row .tools,.deck-menu,.detail-actions{display:none!important}
+  .card-row .tools,.deck-menu,.detail-actions,.bottom-nav,.topbar{display:none!important}
   .level-dots{display:none!important}
-}
-
-/* RESPONSIVE */
-@media(max-width:900px){
-  .nav button span.nav-label{display:none}
-  .nav button{padding:8px 11px}
-  .logo-text small{display:none}
-  .quiz-options{grid-template-columns:1fr}
-  .match-grid{grid-template-columns:1fr}
-}
-@media(max-width:640px){
-  .deck-grid{grid-template-columns:1fr}
-  .detail-actions{width:100%}
-  .detail-actions .btn{flex:1}
-  .study-actions .btn{padding:12px 20px;font-size:13.5px;flex:1}
-  .action-group{width:100%}
-  .streak-badge span.streak-text{display:none}
-  .action-tiles{grid-template-columns:1fr 1fr}
-}
-@media(max-width:400px){
-  .action-tiles{grid-template-columns:1fr}
-  .stat-grid{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
@@ -692,7 +851,7 @@ main{padding:clamp(20px,3vw,36px) clamp(14px,3vw,32px) 90px;max-width:1440px;mar
     <button data-nav="today">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
       <span class="nav-label">Hôm nay</span>
-      <span class="badge-mini" id="todayBadge" style="display:none">0</span>
+      <span class="badge-mini" id="todayBadgeDesktop" style="display:none">0</span>
     </button>
     <button data-nav="stats">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg>
@@ -701,7 +860,7 @@ main{padding:clamp(20px,3vw,36px) clamp(14px,3vw,32px) 90px;max-width:1440px;mar
     <button data-nav="trash">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
       <span class="nav-label">Thùng rác</span>
-      <span class="badge-mini" id="trashBadge" style="display:none">0</span>
+      <span class="badge-mini" id="trashBadgeDesktop" style="display:none">0</span>
     </button>
   </nav>
   <div class="top-actions">
@@ -710,10 +869,10 @@ main{padding:clamp(20px,3vw,36px) clamp(14px,3vw,32px) 90px;max-width:1440px;mar
       <span id="streakNum">0</span>
       <span class="streak-text">ngày</span>
     </div>
-    <button class="icon-btn" id="soundBtn" title="Âm thanh">
+    <button class="icon-btn" id="soundBtn" title="Âm thanh" aria-label="Âm thanh">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg>
     </button>
-    <button class="icon-btn" id="themeBtn" title="Đổi giao diện">
+    <button class="icon-btn" id="themeBtn" title="Đổi giao diện" aria-label="Đổi giao diện">
       <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
     </button>
   </div>
@@ -724,14 +883,14 @@ main{padding:clamp(20px,3vw,36px) clamp(14px,3vw,32px) 90px;max-width:1440px;mar
     <div class="hero">
       <div class="hero-badge"><span class="dot"></span> Học mọi lúc, nhớ mọi nơi</div>
       <h1>Ghi nhớ mọi thứ<br>với Qusin Flashcard</h1>
-      <p>Tạo bộ thẻ, ôn tập với spaced repetition, chơi quiz và game ghép cặp. Toàn bộ dữ liệu lưu trên máy bạn.</p>
+      <p>Tạo bộ thẻ, ôn tập với spaced repetition, chơi quiz và game ghép cặp.</p>
     </div>
     <div class="section-head">
       <h2>📚 Bộ thẻ <span class="count-pill" id="deckCount">0</span></h2>
       <div class="spacer"></div>
       <div class="search-wrap">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-        <input class="search-input" id="searchInput" placeholder="Tìm bộ thẻ...">
+        <input class="search-input" id="searchInput" placeholder="Tìm bộ thẻ..." autocomplete="off">
       </div>
       <button class="btn btn-ghost" id="importBtn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
@@ -739,7 +898,7 @@ main{padding:clamp(20px,3vw,36px) clamp(14px,3vw,32px) 90px;max-width:1440px;mar
       </button>
       <button class="btn btn-primary" onclick="openDeckModal()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-        Tạo bộ thẻ
+        Tạo
       </button>
     </div>
     <div class="deck-grid" id="deckGrid"></div>
@@ -754,9 +913,31 @@ main{padding:clamp(20px,3vw,36px) clamp(14px,3vw,32px) 90px;max-width:1440px;mar
   <section id="view-trash" class="view"><div id="trashWrap"></div></section>
 </main>
 
+<!-- BOTTOM NAV (mobile only) -->
+<nav class="bottom-nav">
+  <button class="active" data-nav="decks">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+    <span>Bộ thẻ</span>
+  </button>
+  <button data-nav="today">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+    <span>Hôm nay</span>
+    <span class="badge-mini" id="todayBadge" style="display:none">0</span>
+  </button>
+  <button data-nav="stats">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg>
+    <span>Thống kê</span>
+  </button>
+  <button data-nav="trash">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+    <span>Thùng rác</span>
+    <span class="badge-mini" id="trashBadge" style="display:none">0</span>
+  </button>
+</nav>
+
 <div id="modalRoot"></div>
 <div id="toast-root"></div>
-<input type="file" id="fileInput" accept=".json,.csv,.txt" style="display:none">
+<input type="file" id="fileInput" accept=".json,.csv,.txt,.qusin" style="display:none">
 
 <script>
 /* ============ CONSTANTS ============ */
@@ -767,7 +948,7 @@ const COLORS = [
   ['#00d4a0','#2ee6a8'], ['#a855f7','#ec4899']
 ];
 const EMOJIS = ['📘','🧠','🌍','🔬','💡','🎯','📝','🗣️','🧮','🎨','⚗️','🏛️','💻','🎵','🚀','🌟','📖','🔤'];
-const INTERVALS = [0, 1, 3, 7, 14, 30]; // days by level
+const INTERVALS = [0, 1, 3, 7, 14, 30];
 
 /* ============ STATE ============ */
 let state = {
@@ -1011,10 +1192,14 @@ document.querySelectorAll('[data-nav]').forEach(b => b.addEventListener('click',
 
 function updateBadges() {
   const due = totalDue();
-  const tb = $('#todayBadge');
-  if (tb) { tb.textContent = due; tb.style.display = due > 0 ? 'inline-block' : 'none'; }
-  const trb = $('#trashBadge');
-  if (trb) { trb.textContent = state.trash.length; trb.style.display = state.trash.length > 0 ? 'inline-block' : 'none'; }
+  ['todayBadge', 'todayBadgeDesktop'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = due; el.style.display = due > 0 ? 'inline-block' : 'none'; }
+  });
+  ['trashBadge', 'trashBadgeDesktop'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = state.trash.length; el.style.display = state.trash.length > 0 ? 'inline-block' : 'none'; }
+  });
 }
 
 /* ============ RENDER DECKS ============ */
@@ -1041,16 +1226,16 @@ function renderDecks() {
     return `<div class="deck-card" style="--c1:${c1};--c2:${c2};--i:${i}" data-id="${d.id}">
       <div class="deck-accent"></div>
       <div class="deck-menu">
-        <button class="mini-btn" data-act="export" title="Xuất JSON">
+        <button class="mini-btn" data-act="export" title="Xuất JSON" aria-label="Xuất">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>
         </button>
-        <button class="mini-btn" data-act="share" title="Chia sẻ">
+        <button class="mini-btn" data-act="share" title="Chia sẻ" aria-label="Chia sẻ">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51L8.59 10.49"/></svg>
         </button>
-        <button class="mini-btn" data-act="edit" title="Sửa">
+        <button class="mini-btn" data-act="edit" title="Sửa" aria-label="Sửa">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
         </button>
-        <button class="mini-btn del" data-act="delete" title="Xoá">
+        <button class="mini-btn del" data-act="delete" title="Xoá" aria-label="Xoá">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
         </button>
       </div>
@@ -1113,14 +1298,14 @@ function openDeckModal(deck) {
     <div class="field"><label>Tên bộ thẻ</label><input class="input" id="dName" placeholder="VD: Từ vựng tiếng Anh..." value="${esc(d.name)}" maxlength="60"></div>
     <div class="field"><label>Mô tả (tuỳ chọn)</label><input class="input" id="dDesc" placeholder="Mô tả ngắn..." value="${esc(d.desc || '')}" maxlength="120"></div>
     <div class="field"><label>Biểu tượng</label>
-      <div class="emoji-picker" id="emojiPicker">${EMOJIS.map(e => `<button class="emoji-opt ${e === d.icon ? 'sel' : ''}" data-emoji="${e}">${e}</button>`).join('')}</div>
+      <div class="emoji-picker" id="emojiPicker">${EMOJIS.map(e => `<button class="emoji-opt ${e === d.icon ? 'sel' : ''}" data-emoji="${e}" type="button">${e}</button>`).join('')}</div>
     </div>
     <div class="field"><label>Màu chủ đề</label>
       <div class="color-picker" id="colorPicker">${COLORS.map((c, i) => `<div class="color-opt ${i === (d.color || 0) ? 'sel' : ''}" data-color="${i}" style="background:linear-gradient(135deg,${c[0]},${c[1]})"></div>`).join('')}</div>
     </div>
     <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal()">Huỷ</button>
-      <button class="btn btn-primary" id="saveDeck">${editing ? 'Lưu' : 'Tạo'}</button>
+      <button class="btn btn-ghost" onclick="closeModal()" type="button">Huỷ</button>
+      <button class="btn btn-primary" id="saveDeck" type="button">${editing ? 'Lưu' : 'Tạo'}</button>
     </div>`, ov => {
     let selEmoji = d.icon || '📘', selColor = d.color || 0;
     ov.querySelectorAll('.emoji-opt').forEach(b => b.addEventListener('click', () => {
@@ -1156,8 +1341,8 @@ function confirmDeleteDeck(deck) {
     <h3>🗑️ Chuyển vào thùng rác?</h3>
     <p class="desc">Bộ thẻ <strong style="color:var(--text)">"${esc(deck.name)}"</strong> cùng <strong>${deck.cards.length}</strong> thẻ sẽ được chuyển vào thùng rác. Bạn có thể khôi phục trong 7 ngày.</p>
     <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal()">Huỷ</button>
-      <button class="btn btn-danger" id="confirmDel">Chuyển vào thùng rác</button>
+      <button class="btn btn-ghost" onclick="closeModal()" type="button">Huỷ</button>
+      <button class="btn btn-danger" id="confirmDel" type="button">Xoá</button>
     </div>`, ov => {
     ov.querySelector('#confirmDel').addEventListener('click', () => {
       state.trash.unshift({ type: 'deck', data: deck, deletedAt: Date.now() });
@@ -1186,7 +1371,7 @@ function renderDeckDetail() {
 
   wrap.innerHTML = `
     <div class="detail-head no-print" style="--c1:${c1};--c2:${c2}">
-      <button class="icon-btn" onclick="go('decks')" title="Quay lại">
+      <button class="icon-btn" onclick="go('decks')" title="Quay lại" aria-label="Quay lại">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
       </button>
       <div class="deck-icon">${esc(deck.icon)}</div>
@@ -1195,13 +1380,13 @@ function renderDeckDetail() {
         <p>${esc(deck.desc || 'Không có mô tả')} · ${deck.cards.length} thẻ · ${m}% thành thạo${due ? ` · <span style="color:var(--warning);font-weight:700">${due} cần ôn</span>` : ''}</p>
       </div>
       <div class="detail-actions">
-        <button class="btn btn-ghost" onclick="window.print()" title="In">
+        <button class="btn btn-ghost" onclick="window.print()" title="In" aria-label="In">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
           In
         </button>
         <button class="btn btn-ghost" onclick="openCardModal()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-          Thêm thẻ
+          Thêm
         </button>
         <button class="btn btn-primary" id="studyBtn" ${deck.cards.length ? '' : 'disabled'}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
@@ -1243,7 +1428,7 @@ function renderDeckDetail() {
       <div class="spacer"></div>
       ${deck.cards.length ? `<button class="btn btn-ghost sm" id="shuffleBtn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
-        Xáo trộn</button>` : ''}
+        Xáo</button>` : ''}
     </div>
     <div class="card-list" id="cardList"></div>
   `;
@@ -1289,7 +1474,7 @@ function renderCardList() {
         <div class="front">${esc(c.front)}</div>
         <div class="back">${esc((c.back || '').split('\n')[0])}</div>
       </div>
-      ${due ? '<span class="deck-stat" style="color:var(--warning);font-weight:800;font-size:11px">CẦN ÔN</span>' : ''}
+      ${due ? '<span class="deck-stat" style="color:var(--warning);font-weight:800;font-size:10.5px">CẦN ÔN</span>' : ''}
       <div class="level-dots" title="Cấp ${c.level || 0}/5">
         ${[1,2,3,4,5].map(n => `<i class="${(c.level || 0) >= n ? 'on' : ''}"></i>`).join('')}
       </div>
@@ -1350,8 +1535,8 @@ function openCardModal(card) {
     <div class="field"><label>Mặt trước (câu hỏi)</label><textarea class="textarea" id="cFront" placeholder="Nhập câu hỏi...">${esc(c.front)}</textarea></div>
     <div class="field"><label>Mặt sau (đáp án)</label><textarea class="textarea" id="cBack" placeholder="Nhập câu trả lời...">${esc(c.back)}</textarea></div>
     <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal()">Huỷ</button>
-      <button class="btn btn-primary" id="saveCard">${editing ? 'Lưu' : 'Thêm'}</button>
+      <button class="btn btn-ghost" onclick="closeModal()" type="button">Huỷ</button>
+      <button class="btn btn-primary" id="saveCard" type="button">${editing ? 'Lưu' : 'Thêm'}</button>
     </div>`, ov => {
     const f = ov.querySelector('#cFront'), b = ov.querySelector('#cBack');
     setTimeout(() => f.focus(), 120);
@@ -1365,12 +1550,8 @@ function openCardModal(card) {
         toast('Đã thêm thẻ! ✨', 'success'); beep(780, .09);
       }
       save(); closeModal(); renderCardList(); renderDeckDetailHead(); updateBadges();
-      if (!editing && ov.dataset.chain === '1') setTimeout(() => openCardModal(), 200);
     };
     ov.querySelector('#saveCard').addEventListener('click', saveIt);
-    ov.addEventListener('keydown', e => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); ov.dataset.chain = '1'; saveIt(); }
-    });
   });
 }
 
@@ -1400,11 +1581,11 @@ function renderStudy() {
   const wrap = $('#studyWrap');
   wrap.innerHTML = `
     <div class="study-top">
-      <button class="icon-btn" onclick="exitStudy()" title="Thoát">
+      <button class="icon-btn" onclick="exitStudy()" title="Thoát" aria-label="Thoát">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </button>
       <span class="title">${esc(deck.icon)} ${esc(deck.name)}</span>
-      <button class="mini-btn ${card.starred ? 'star-btn on' : ''}" id="studyStar" title="Đánh dấu" style="width:32px;height:32px;opacity:1">
+      <button class="mini-btn ${card.starred ? 'star-btn on' : ''}" id="studyStar" title="Đánh dấu" style="width:36px;height:36px;opacity:1">
         <svg viewBox="0 0 24 24" fill="${card.starred ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
       </button>
       <span class="counter">${session.index + 1} / ${session.total}</span>
@@ -1448,7 +1629,7 @@ function renderStudyActions() {
   const box = $('#studyActions');
   if (!box) return;
   if (!session.flipped) {
-    box.innerHTML = `<button class="btn btn-primary" id="flipBtn" style="padding:13px 38px">
+    box.innerHTML = `<button class="btn btn-primary" id="flipBtn" style="max-width:280px">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
       Lật thẻ</button>`;
     $('#flipBtn').addEventListener('click', e => { e.stopPropagation(); flipCard(); });
@@ -1513,7 +1694,6 @@ function renderResult() {
   const pct = total ? Math.round(session.results.good / total * 100) : 0;
   const elapsed = Math.round((Date.now() - session.startTime) / 1000);
   const mins = Math.floor(elapsed / 60), secs = elapsed % 60;
-  const deck = getDeck(session.deckId);
   let emoji = '💪', title = 'Cố lên nhé!', sub = 'Ôn thêm vài lần nữa là nhớ ngay.';
   if (pct >= 90) { emoji = '🏆'; title = 'Xuất sắc!'; sub = 'Bạn nắm rất vững rồi!'; }
   else if (pct >= 70) { emoji = '🎉'; title = 'Làm tốt!'; sub = 'Tiến bộ rõ rệt!'; }
@@ -1551,7 +1731,7 @@ function renderResult() {
   $('#againBtn').addEventListener('click', () => startStudy(session.deckId, session.queue));
 }
 
-/* ============ QUIZ (MCQ / TYPE / LISTEN) ============ */
+/* ============ QUIZ ============ */
 function startQuiz(deckId, mode) {
   const deck = getDeck(deckId);
   if (!deck || deck.cards.length < 2) { toast('Cần ít nhất 2 thẻ!', 'warn'); return; }
@@ -1561,9 +1741,7 @@ function startQuiz(deckId, mode) {
     results: { good: 0, bad: 0 }, startTime: Date.now(), total: queue.length,
     answered: false, currentOptions: null, timer: null, timeLimit: 0
   };
-  if (mode === 'mcq') session.timeLimit = 30;
-  else if (mode === 'type') session.timeLimit = 45;
-  else session.timeLimit = 30;
+  session.timeLimit = mode === 'type' ? 45 : 30;
   go('quiz');
   renderQuiz();
 }
@@ -1584,28 +1762,26 @@ function renderQuiz() {
 
   wrap.innerHTML = `
     <div class="quiz-head">
-      <button class="icon-btn" onclick="exitQuiz()" title="Thoát">
+      <button class="icon-btn" onclick="exitQuiz()" title="Thoát" aria-label="Thoát">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </button>
-      <span class="title">${esc(deck.icon)} ${esc(deck.name)} · ${modeLabel}</span>
+      <span class="title">${esc(deck.icon)} ${esc(deck.name)}</span>
       <span class="timer" id="quizTimer">⏱ <span id="timerNum">${session.timeLimit}</span>s</span>
       <span class="counter">${session.index + 1} / ${session.total}</span>
     </div>
     <div class="study-progress"><div class="fill" style="width:${pct}%"></div></div>
     <div class="quiz-question">
-      <span class="q-label">${session.variant === 'listen' ? 'Nghe và trả lời' : 'Câu hỏi'}</span>
+      <span class="q-label">${session.variant === 'listen' ? 'Nghe và trả lời' : modeLabel}</span>
       <div class="q-text">${session.variant === 'listen' ? '🔊 Nhấn loa để nghe' : esc(card.front)}</div>
       ${(session.variant === 'listen' || /[a-zA-Z]/.test(card.front)) ? `
-      <button class="q-speak" id="speakBtn" title="Nghe">
+      <button class="q-speak" id="speakBtn" title="Nghe" aria-label="Nghe">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
       </button>` : ''}
     </div>
     <div id="quizBody"></div>
   `;
 
-  if (session.variant === 'listen') {
-    setTimeout(() => { speak(card.front); }, 400);
-  }
+  if (session.variant === 'listen') setTimeout(() => { speak(card.front); }, 400);
   const spb = $('#speakBtn');
   if (spb) spb.addEventListener('click', () => speak(card.front));
 
@@ -1633,9 +1809,7 @@ function startQuizTimer() {
         if (session.variant === 'mcq') {
           const correctIdx = session.currentOptions?.correct;
           if (correctIdx !== undefined) selectMCQ(correctIdx, true);
-        } else {
-          submitType(true);
-        }
+        } else submitType(true);
       }
     }
   }, 1000);
@@ -1651,7 +1825,7 @@ function renderMCQ(body, deck, card) {
   const keys = ['A', 'B', 'C', 'D'];
 
   body.innerHTML = `<div class="quiz-options">
-    ${options.map((o, i) => `<button class="quiz-option" data-idx="${i}">
+    ${options.map((o, i) => `<button class="quiz-option" data-idx="${i}" type="button">
       <span class="key">${keys[i]}</span>
       <span>${esc(o.text)}</span>
     </button>`).join('')}
@@ -1689,19 +1863,18 @@ function selectMCQ(idx, timeout) {
 
 function renderTypeInput(body, deck, card) {
   body.innerHTML = `
-    <input type="text" class="type-input" id="typeInput" placeholder="Nhập đáp án..." autocomplete="off" spellcheck="false">
+    <input type="text" class="type-input" id="typeInput" placeholder="Nhập đáp án..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
     <div id="typeFeedback"></div>
     <div style="display:flex;gap:10px;margin-top:14px">
-      <button class="btn btn-ghost" id="skipBtn">Bỏ qua</button>
-      <button class="btn btn-primary" id="submitBtn" style="flex:1">Kiểm tra</button>
+      <button class="btn btn-ghost" id="skipBtn" type="button">Bỏ qua</button>
+      <button class="btn btn-primary" id="submitBtn" type="button" style="flex:1">Kiểm tra</button>
     </div>
   `;
   const input = $('#typeInput');
   setTimeout(() => input.focus(), 120);
 
-  const submit = () => submitType(false);
-  input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); submit(); } });
-  $('#submitBtn').addEventListener('click', submit);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); submitType(false); } });
+  $('#submitBtn').addEventListener('click', () => submitType(false));
   $('#skipBtn').addEventListener('click', () => {
     session.answered = true;
     if (session.timer) clearInterval(session.timer);
@@ -1709,6 +1882,10 @@ function renderTypeInput(body, deck, card) {
     input.disabled = true;
     input.value = card.back;
     showTypeAnswer(card.back, false);
+    const d = getDeck(session.deckId);
+    const c = d.cards.find(x => x.id === card.id);
+    if (c) { c.reviewed = (c.reviewed || 0) + 1; c.wrong = (c.wrong || 0) + 1; c.level = Math.max(0, (c.level || 0) - 1); save(); }
+    session.results.bad++;
     setTimeout(() => { session.answered = false; session.index++; renderQuiz(); }, 1400);
   });
 }
@@ -1750,7 +1927,7 @@ function showTypeAnswer(answer, correct, userAns) {
   if (!correct) {
     fb.innerHTML = `<div class="type-answer-box">
       <div class="lbl">ĐÁP ÁN ĐÚNG</div>
-      <div style="font-weight:700;font-size:16px;white-space:pre-wrap">${esc(answer)}</div>
+      <div style="font-weight:700;font-size:15px;white-space:pre-wrap">${esc(answer)}</div>
     </div>`;
   } else {
     fb.innerHTML = `<div class="type-answer-box" style="background:color-mix(in srgb,var(--success) 15%,var(--surface))">
@@ -1815,13 +1992,11 @@ function startMatch(deckId) {
   const left = pool.slice().sort(() => Math.random() - .5);
   const right = pool.slice().sort(() => Math.random() - .5);
   session = {
-    mode: 'match', deckId,
-    left, right,
+    mode: 'match', deckId, left, right,
     selectedLeft: null, selectedRight: null,
     matched: new Set(),
     results: { good: 0, bad: 0 },
-    startTime: Date.now(),
-    lock: false
+    startTime: Date.now(), lock: false
   };
   go('match');
   renderMatch();
@@ -1838,11 +2013,11 @@ function renderMatch() {
 
   wrap.innerHTML = `
     <div class="quiz-head">
-      <button class="icon-btn" onclick="exitMatch()" title="Thoát">
+      <button class="icon-btn" onclick="exitMatch()" title="Thoát" aria-label="Thoát">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </button>
       <span class="title">🧩 Ghép cặp · ${esc(deck.icon)} ${esc(deck.name)}</span>
-      <span class="counter">${done} / ${total} cặp</span>
+      <span class="counter">${done} / ${total}</span>
     </div>
     <div class="study-progress"><div class="fill" style="width:${done / total * 100}%"></div></div>
     <div class="match-grid">
@@ -1854,9 +2029,8 @@ function renderMatch() {
       </div>
     </div>
     <div class="study-foot">
-      <span>👆 Nhấn 1 ô bên trái rồi 1 ô bên phải để ghép</span>
-      <span>❤️ Đúng: ${session.results.good}</span>
-      <span>💔 Sai: ${session.results.bad}</span>
+      <span>👆 Nhấn 1 ô trái, 1 ô phải để ghép</span>
+      <span>❤️ ${session.results.good} · 💔 ${session.results.bad}</span>
     </div>
   `;
 
@@ -1888,13 +2062,13 @@ function checkMatch() {
   if (!l || !r) return;
   session.lock = true;
   const match = l.dataset.id === r.dataset.id;
+  const deck = getDeck(session.deckId);
   if (match) {
     l.classList.remove('selected'); r.classList.remove('selected');
     l.classList.add('matched'); r.classList.add('matched');
     session.matched.add(l.dataset.id);
     session.results.good++;
     beep(880, .09, 'triangle', .05);
-    const deck = getDeck(session.deckId);
     const card = deck.cards.find(c => c.id === l.dataset.id);
     if (card) {
       card.reviewed = (card.reviewed || 0) + 1;
@@ -1905,13 +2079,11 @@ function checkMatch() {
     }
     session.selectedLeft = null; session.selectedRight = null;
     session.lock = false;
-    if (session.matched.size === session.left.length) setTimeout(() => renderMatch(), 400);
-    else renderMatch();
+    renderMatch();
   } else {
     l.classList.add('wrong'); r.classList.add('wrong');
     beep(220, .16, 'sawtooth', .04);
     session.results.bad++;
-    const deck = getDeck(session.deckId);
     const card = deck.cards.find(c => c.id === l.dataset.id);
     if (card) {
       card.reviewed = (card.reviewed || 0) + 1;
@@ -1942,7 +2114,7 @@ function renderMatchResult() {
   const mins = Math.floor(elapsed / 60), secs = elapsed % 60;
   wrap.innerHTML = `
     <div class="result">
-      <div style="font-size:80px;margin-bottom:18px;animation:bob 2s ease-in-out infinite">🎉</div>
+      <div style="font-size:72px;margin-bottom:14px;animation:bob 2s ease-in-out infinite">🎉</div>
       <h2>Hoàn thành!</h2>
       <p>Bạn đã ghép hết ${session.left.length} cặp trong ${mins}′${String(secs).padStart(2, '0')}″</p>
       <div class="result-stats">
@@ -1960,7 +2132,7 @@ function renderMatchResult() {
   $('#againBtn').addEventListener('click', () => startMatch(session.deckId));
 }
 
-/* ============ TODAY (SPACED REPETITION) ============ */
+/* ============ TODAY ============ */
 function renderToday() {
   const wrap = $('#todayWrap');
   const totalDue = totalDue();
@@ -1980,9 +2152,9 @@ function renderToday() {
   const studied = (state.streak.dates || []).includes(today);
 
   wrap.innerHTML = `
-    <div class="hero" style="padding-bottom:26px">
-      <h1 style="font-size:clamp(26px,4vw,40px)">Ôn tập hôm nay</h1>
-      <p>${totalDue > 0 ? `Bạn có <strong style="color:var(--warning)">${totalDue} thẻ</strong> cần ôn tập theo lịch spaced repetition.` : 'Tuyệt vời! Không còn thẻ nào cần ôn hôm nay. 🎉'}</p>
+    <div class="hero" style="padding-bottom:20px">
+      <h1 style="font-size:clamp(24px,5vw,38px)">Ôn tập hôm nay</h1>
+      <p>${totalDue > 0 ? `Bạn có <strong style="color:var(--warning)">${totalDue} thẻ</strong> cần ôn theo lịch spaced repetition.` : 'Tuyệt vời! Không còn thẻ nào cần ôn hôm nay. 🎉'}</p>
     </div>
 
     <div class="stat-grid">
@@ -1990,27 +2162,27 @@ function renderToday() {
         <div class="glow" style="background:#ffc542"></div>
         <span class="ico">📅</span>
         <div class="v" style="color:var(--warning)">${totalDue}</div>
-        <div class="l">THẺ CẦN ÔN HÔM NAY</div>
+        <div class="l">CẦN ÔN HÔM NAY</div>
       </div>
       <div class="stat-box" style="--i:1">
         <div class="glow" style="background:#ff5c9d"></div>
         <span class="ico">🔥</span>
         <div class="v" style="color:var(--accent)">${state.streak.current || 0}</div>
-        <div class="l">CHUỖI NGÀY HIỆN TẠI</div>
+        <div class="l">CHUỖI HIỆN TẠI</div>
       </div>
       <div class="stat-box" style="--i:2">
         <div class="glow" style="background:#2ee6a8"></div>
         <span class="ico">🏅</span>
         <div class="v" style="color:var(--success)">${state.streak.best || 0}</div>
-        <div class="l">KỶ LỤC CHUỖI</div>
+        <div class="l">KỶ LỤC</div>
       </div>
     </div>
 
     ${totalDue > 0 ? `
-      <div style="text-align:center;margin-bottom:30px">
-        <button class="btn btn-primary" id="studyAllDue" style="padding:14px 38px;font-size:15px;border-radius:15px">
+      <div style="text-align:center;margin-bottom:24px">
+        <button class="btn btn-primary" id="studyAllDue" style="padding:14px 32px;font-size:15px;border-radius:15px;width:100%;max-width:400px">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          Học tất cả ${totalDue} thẻ cần ôn
+          Học tất cả ${totalDue} thẻ
         </button>
       </div>
       <div class="section-head"><h2>📚 Theo bộ thẻ</h2></div>
@@ -2045,7 +2217,6 @@ function renderToday() {
     const allDueIds = [];
     state.decks.forEach(d => dueCards(d).forEach(c => allDueIds.push({ deckId: d.id, cardId: c.id })));
     if (!allDueIds.length) return;
-    // Use first deck as session container but include all due
     startStudyMulti(allDueIds);
   });
 
@@ -2059,11 +2230,8 @@ function renderToday() {
 }
 
 function startStudyMulti(items) {
-  // Group by deck, but for study we need a single deck context.
-  // Simplify: study the deck that has the most due cards, but include all
   if (!items.length) return;
   const firstDeckId = items[0].deckId;
-  // Build a virtual session that studies cards from multiple decks
   const queue = items.map(x => ({ deckId: x.deckId, cardId: x.cardId }));
   session = {
     mode: 'study', multi: true, queue, index: 0, flipped: false,
@@ -2085,7 +2253,7 @@ function renderStudyMulti() {
   const wrap = $('#studyWrap');
   wrap.innerHTML = `
     <div class="study-top">
-      <button class="icon-btn" onclick="exitStudy()" title="Thoát">
+      <button class="icon-btn" onclick="exitStudy()" aria-label="Thoát">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </button>
       <span class="title">${esc(deck.icon)} Ôn tập hỗn hợp</span>
@@ -2121,7 +2289,7 @@ function renderStudyActionsMulti() {
   const box = $('#studyActions');
   if (!box) return;
   if (!session.flipped) {
-    box.innerHTML = `<button class="btn btn-primary" id="flipBtn" style="padding:13px 38px">Lật thẻ</button>`;
+    box.innerHTML = `<button class="btn btn-primary" id="flipBtn" style="max-width:280px">Lật thẻ</button>`;
     $('#flipBtn').addEventListener('click', e => { e.stopPropagation(); session.flipped = true; $('#flashcard').classList.add('flipped'); beep(620, .07); renderStudyActionsMulti(); });
   } else {
     box.innerHTML = `<div class="action-group">
@@ -2210,23 +2378,20 @@ function renderStats() {
     { ico: '✅', v: s.correct, l: 'LƯỢT ĐÚNG', c: '#2ee6a8' },
     { ico: '❌', v: s.wrong, l: 'LƯỢT SAI', c: '#ffc542' },
     { ico: '🔥', v: state.streak.current || 0, l: 'CHUỖI HIỆN TẠI', c: '#ff7a45' },
-    { ico: '🏅', v: state.streak.best || 0, l: 'KỶ LỤC CHUỖI', c: '#b06cff' }
+    { ico: '🏅', v: state.streak.best || 0, l: 'KỶ LỤC', c: '#b06cff' }
   ];
 
-  // Heatmap 365 days
   const today = new Date();
-  const dayCount = 371; // 53 weeks * 7
+  const dayCount = 371;
   const startDate = new Date(today);
   startDate.setDate(startDate.getDate() - (dayCount - 1));
-  // Align to Sunday
   while (startDate.getDay() !== 0) startDate.setDate(startDate.getDate() - 1);
   const dateMap = {};
   (state.streak.dates || []).forEach(d => { dateMap[d] = (dateMap[d] || 0) + 1; });
-  // Also count studies from cards
   state.decks.forEach(d => d.cards.forEach(c => {
     if (c.lastReviewed) {
       const k = dayKey(c.lastReviewed);
-      dateMap[k] = (dateMap[k] || 0) + 0.1; // lighter weight
+      dateMap[k] = (dateMap[k] || 0) + 0.1;
     }
   }));
 
@@ -2240,7 +2405,7 @@ function renderStats() {
     else if (v >= 0.5) lvl = 'l3';
     else if (v >= 0.2) lvl = 'l2';
     else if (v > 0) lvl = 'l1';
-    heat += `<div class="heat-cell ${lvl}" title="${k}: ${Math.round(v * 10) / 10} hoạt động"></div>`;
+    heat += `<div class="heat-cell ${lvl}" title="${k}: ${Math.round(v * 10) / 10}"></div>`;
     d.setDate(d.getDate() + 1);
   }
 
@@ -2292,7 +2457,6 @@ function renderStats() {
 /* ============ TRASH ============ */
 function renderTrash() {
   const wrap = $('#trashWrap');
-  // Cleanup > 7 days
   const now = Date.now();
   const before = state.trash.length;
   state.trash = state.trash.filter(t => now - t.deletedAt < 7 * 86400000);
@@ -2300,7 +2464,7 @@ function renderTrash() {
   updateBadges();
 
   if (!state.trash.length) {
-    wrap.innerHTML = `<div class="hero" style="padding-bottom:22px"><h1 style="font-size:clamp(24px,4vw,36px)">Thùng rác</h1><p>Các mục đã xoá sẽ lưu ở đây trong 7 ngày.</p></div>
+    wrap.innerHTML = `<div class="hero" style="padding-bottom:18px"><h1 style="font-size:clamp(22px,5vw,34px)">Thùng rác</h1><p>Các mục đã xoá sẽ lưu ở đây trong 7 ngày.</p></div>
       <div class="empty">
         <span class="empty-emoji">🗑️</span>
         <h3>Thùng rác trống</h3>
@@ -2311,8 +2475,8 @@ function renderTrash() {
   }
 
   wrap.innerHTML = `
-    <div class="hero" style="padding-bottom:22px">
-      <h1 style="font-size:clamp(24px,4vw,36px)">Thùng rác</h1>
+    <div class="hero" style="padding-bottom:18px">
+      <h1 style="font-size:clamp(22px,5vw,34px)">Thùng rác</h1>
       <p>Mục bị xoá sẽ tự động biến mất sau 7 ngày. Khôi phục bất cứ lúc nào.</p>
     </div>
     <div class="section-head">
@@ -2325,16 +2489,15 @@ function renderTrash() {
         const ago = Math.round((now - t.deletedAt) / 3600000);
         const agoText = ago < 1 ? 'vừa xong' : ago < 24 ? `${ago} giờ trước` : `${Math.floor(ago / 24)} ngày trước`;
         if (t.type === 'deck') {
-          const [c1, c2] = deckColor(t.data);
-          return `<div class="trash-item" data-i="${i}" style="--c1:${c1};--c2:${c2}">
+          return `<div class="trash-item" data-i="${i}">
             <div class="ico">${esc(t.data.icon || '📘')}</div>
             <div class="info">
               <div class="name">${esc(t.data.name)}</div>
-              <div class="meta">Bộ thẻ · ${t.data.cards.length} thẻ · Xoá ${agoText}</div>
+              <div class="meta">Bộ thẻ · ${t.data.cards.length} thẻ · ${agoText}</div>
             </div>
             <div class="actions">
-              <button class="btn btn-success sm" data-act="restore">Khôi phục</button>
-              <button class="btn btn-danger sm" data-act="purge">Xoá hẳn</button>
+              <button class="btn btn-success sm" data-act="restore" type="button">Khôi phục</button>
+              <button class="btn btn-danger sm" data-act="purge" type="button">Xoá</button>
             </div>
           </div>`;
         } else {
@@ -2342,11 +2505,11 @@ function renderTrash() {
             <div class="ico">🃏</div>
             <div class="info">
               <div class="name">${esc(t.data.front)}</div>
-              <div class="meta">Thẻ từ "${esc(t.deckName || 'Không rõ')}" · Xoá ${agoText}</div>
+              <div class="meta">Thẻ từ "${esc(t.deckName || 'Không rõ')}" · ${agoText}</div>
             </div>
             <div class="actions">
-              <button class="btn btn-success sm" data-act="restore">Khôi phục</button>
-              <button class="btn btn-danger sm" data-act="purge">Xoá hẳn</button>
+              <button class="btn btn-success sm" data-act="restore" type="button">Khôi phục</button>
+              <button class="btn btn-danger sm" data-act="purge" type="button">Xoá</button>
             </div>
           </div>`;
         }
@@ -2367,7 +2530,7 @@ function renderTrash() {
           } else {
             const deck = getDeck(t.deckId);
             if (deck) { deck.cards.push(t.data); toast('Đã khôi phục thẻ!', 'success'); }
-            else toast('Bộ thẻ gốc không còn tồn tại', 'error');
+            else toast('Bộ thẻ gốc không còn', 'error');
           }
           state.trash.splice(i, 1);
           save(); renderTrash(); renderDecks(); updateBadges();
@@ -2407,16 +2570,15 @@ function shareDeck(deck) {
   const encoded = btoa(unescape(encodeURIComponent(data)));
   const url = location.origin + location.pathname + '#deck=' + encoded;
   if (url.length > 8000) {
-    // URL too long → fallback to copy JSON
     navigator.clipboard.writeText(data).then(() => {
-      toast('Link quá dài — đã copy JSON vào clipboard!', 'warn');
+      toast('Link quá dài — đã copy JSON!', 'warn');
     }).catch(() => toast('Không copy được', 'error'));
     return;
   }
   navigator.clipboard.writeText(url).then(() => {
     toast('Đã copy link chia sẻ! 🔗', 'success'); beep(880, .1, 'triangle', .05);
   }).catch(() => {
-    openModal(`<h3>🔗 Link chia sẻ</h3><p class="desc">Copy link dưới đây để chia sẻ bộ thẻ:</p>
+    openModal(`<h3>🔗 Link chia sẻ</h3><p class="desc">Copy link dưới đây:</p>
       <textarea class="textarea" readonly style="font-size:11px">${esc(url)}</textarea>
       <div class="modal-actions"><button class="btn btn-primary" onclick="closeModal()">Đóng</button></div>`);
   });
@@ -2433,28 +2595,23 @@ function checkShareURL() {
     openModal(`
       <h3>🔗 Bộ thẻ được chia sẻ</h3>
       <p class="desc">Ai đó muốn chia sẻ bộ thẻ với bạn:</p>
-      <div style="padding:16px;border-radius:14px;background:var(--surface);border:1px solid var(--border);margin-bottom:20px">
+      <div style="padding:14px;border-radius:14px;background:var(--surface);border:1px solid var(--border);margin-bottom:18px">
         <div style="display:flex;align-items:center;gap:12px">
-          <div style="font-size:28px">${esc(deck.icon || '📘')}</div>
-          <div>
-            <div style="font-weight:700;font-size:16px">${esc(deck.name)}</div>
-            <div style="font-size:12.5px;color:var(--text-dim);margin-top:2px">${deck.cards.length} thẻ · ${esc(deck.desc || 'Không có mô tả')}</div>
+          <div style="font-size:26px">${esc(deck.icon || '📘')}</div>
+          <div style="min-width:0">
+            <div style="font-weight:700;font-size:15px;word-break:break-word">${esc(deck.name)}</div>
+            <div style="font-size:12px;color:var(--text-dim);margin-top:2px">${deck.cards.length} thẻ · ${esc(deck.desc || 'Không có mô tả')}</div>
           </div>
         </div>
       </div>
       <div class="modal-actions">
-        <button class="btn btn-ghost" onclick="closeModal();location.hash=''">Bỏ qua</button>
-        <button class="btn btn-primary" id="addShared">Thêm vào bộ thẻ</button>
+        <button class="btn btn-ghost" onclick="closeModal();location.hash=''" type="button">Bỏ qua</button>
+        <button class="btn btn-primary" id="addShared" type="button">Thêm</button>
       </div>`, ov => {
       ov.querySelector('#addShared').addEventListener('click', () => {
-        // Re-ID
         const newDeck = {
-          id: uid(),
-          name: deck.name,
-          desc: deck.desc || '',
-          icon: deck.icon || '📘',
-          color: deck.color || 0,
-          created: Date.now(),
+          id: uid(), name: deck.name, desc: deck.desc || '', icon: deck.icon || '📘',
+          color: deck.color || 0, created: Date.now(),
           cards: (deck.cards || []).map(c => ({
             id: uid(), front: c.front, back: c.back, starred: false, level: 0, correct: 0, wrong: 0, reviewed: 0, lastReviewed: 0
           }))
@@ -2462,47 +2619,40 @@ function checkShareURL() {
         state.decks.unshift(newDeck);
         save(); closeModal(); go('decks');
         history.replaceState(null, '', location.pathname);
-        toast('Đã thêm bộ thẻ! 🎉', 'success');
-        burstConfetti(80);
+        toast('Đã thêm bộ thẻ! 🎉', 'success'); burstConfetti(80);
       });
     });
-  } catch (e) {
-    console.warn(e);
-    location.hash = '';
-  }
+  } catch (e) { console.warn(e); location.hash = ''; }
 }
 
-// Import handlers
 $('#importBtn').addEventListener('click', () => {
   openModal(`
     <h3>📥 Nhập bộ thẻ</h3>
     <div class="tabs" id="importTabs">
-      <button class="active" data-tab="file">Từ file</button>
-      <button data-tab="paste">Dán nhanh</button>
-      <button data-tab="json">Dán JSON</button>
+      <button class="active" data-tab="file" type="button">Từ file</button>
+      <button data-tab="paste" type="button">Dán nhanh</button>
+      <button data-tab="json" type="button">Dán JSON</button>
     </div>
     <div id="importTabContent"></div>
     <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal()">Đóng</button>
+      <button class="btn btn-ghost" onclick="closeModal()" type="button">Đóng</button>
     </div>`, ov => {
     const content = ov.querySelector('#importTabContent');
     const renderTab = (tab) => {
       if (tab === 'file') {
         content.innerHTML = `
-          <p class="desc">Chọn file <strong>.json</strong> (bộ thẻ Qusin), <strong>.csv</strong> hoặc <strong>.txt</strong> (mỗi dòng: <code>mặt trước | mặt sau</code>).</p>
-          <button class="btn btn-primary" id="pickFile" style="width:100%">📁 Chọn file</button>
-        `;
+          <p class="desc">Chọn file <strong>.json</strong>, <strong>.csv</strong> hoặc <strong>.txt</strong> (mỗi dòng: <code>mặt trước | mặt sau</code>).</p>
+          <button class="btn btn-primary" id="pickFile" style="width:100%" type="button">📁 Chọn file</button>`;
         content.querySelector('#pickFile').addEventListener('click', () => {
           closeModal();
           setTimeout(() => $('#fileInput').click(), 200);
         });
       } else if (tab === 'paste') {
         content.innerHTML = `
-          <p class="desc">Dán nội dung, mỗi dòng 1 thẻ. Phân tách bằng dấu <code>|</code> giữa mặt trước và mặt sau.<br>Ví dụ:<br><code>Hello | Xin chào</code><br><code>Book | Quyển sách</code></p>
+          <p class="desc">Dán nội dung, mỗi dòng 1 thẻ. Phân tách bằng dấu <code>|</code>.</p>
           <div class="field"><label>Tên bộ thẻ</label><input class="input" id="pName" placeholder="Bộ thẻ mới" value="Bộ thẻ nhập"></div>
-          <div class="field"><label>Nội dung</label><textarea class="textarea" id="pText" placeholder="Hello | Xin chào&#10;Book | Quyển sách" style="min-height:180px;font-family:monospace;font-size:13px"></textarea></div>
-          <button class="btn btn-primary" id="doPaste" style="width:100%">Nhập ngay</button>
-        `;
+          <div class="field"><label>Nội dung</label><textarea class="textarea" id="pText" placeholder="Hello | Xin chào&#10;Book | Quyển sách" style="min-height:140px;font-family:monospace;font-size:13px"></textarea></div>
+          <button class="btn btn-primary" id="doPaste" style="width:100%" type="button">Nhập</button>`;
         content.querySelector('#doPaste').addEventListener('click', () => {
           const name = content.querySelector('#pName').value.trim() || 'Bộ thẻ nhập';
           const text = content.querySelector('#pText').value.trim();
@@ -2516,7 +2666,7 @@ $('#importBtn').addEventListener('click', () => {
               cards.push({ id: uid(), front: parts[0], back: parts.slice(1).join(' | '), starred: false, level: 0, correct: 0, wrong: 0, reviewed: 0, lastReviewed: 0 });
             }
           });
-          if (!cards.length) { toast('Không tìm thấy thẻ hợp lệ!', 'error'); return; }
+          if (!cards.length) { toast('Không có thẻ hợp lệ!', 'error'); return; }
           state.decks.unshift({ id: uid(), name, desc: 'Nhập từ văn bản', icon: '📥', color: 4, created: Date.now(), cards });
           save(); closeModal(); go('decks'); updateBadges();
           toast(`Đã nhập ${cards.length} thẻ! 🎉`, 'success');
@@ -2524,10 +2674,9 @@ $('#importBtn').addEventListener('click', () => {
         });
       } else {
         content.innerHTML = `
-          <p class="desc">Dán nội dung JSON của bộ thẻ (định dạng Qusin).</p>
-          <div class="field"><textarea class="textarea" id="jText" placeholder='{"qusin":true,"deck":{...}}' style="min-height:180px;font-family:monospace;font-size:12px"></textarea></div>
-          <button class="btn btn-primary" id="doJson" style="width:100%">Nhập JSON</button>
-        `;
+          <p class="desc">Dán nội dung JSON của bộ thẻ.</p>
+          <div class="field"><textarea class="textarea" id="jText" placeholder='{"qusin":true,"deck":{...}}' style="min-height:140px;font-family:monospace;font-size:12px"></textarea></div>
+          <button class="btn btn-primary" id="doJson" style="width:100%" type="button">Nhập JSON</button>`;
         content.querySelector('#doJson').addEventListener('click', () => {
           try {
             const raw = content.querySelector('#jText').value.trim();
@@ -2557,7 +2706,6 @@ $('#importBtn').addEventListener('click', () => {
   });
 });
 
-// File input handler
 $('#fileInput').addEventListener('change', e => {
   const file = e.target.files[0];
   if (!file) return;
@@ -2578,12 +2726,10 @@ $('#fileInput').addEventListener('change', e => {
         state.decks.unshift(deck);
         toast(`Đã nhập "${deck.name}"! 🎉`, 'success');
       } else {
-        // CSV/TXT
         const cards = [];
         text.split('\n').forEach(line => {
           line = line.trim();
           if (!line) return;
-          // Support | or tab or comma
           let parts;
           if (line.includes('|')) parts = line.split('|');
           else if (line.includes('\t')) parts = line.split('\t');
@@ -2593,7 +2739,7 @@ $('#fileInput').addEventListener('change', e => {
             cards.push({ id: uid(), front: parts[0], back: parts.slice(1).join(' '), starred: false, level: 0, correct: 0, wrong: 0, reviewed: 0, lastReviewed: 0 });
           }
         });
-        if (!cards.length) { toast('Không tìm thấy thẻ hợp lệ!', 'error'); return; }
+        if (!cards.length) { toast('Không có thẻ hợp lệ!', 'error'); return; }
         state.decks.unshift({ id: uid(), name: name || 'Bộ thẻ nhập', desc: `Nhập từ ${file.name}`, icon: '📥', color: 4, created: Date.now(), cards });
         toast(`Đã nhập ${cards.length} thẻ! 🎉`, 'success');
       }
@@ -2615,7 +2761,6 @@ document.addEventListener('keydown', e => {
   if (tag === 'input' || tag === 'textarea') return;
   const studyView = document.getElementById('view-study')?.classList.contains('active');
   if (!studyView || !session) return;
-
   if (e.code === 'Space') { e.preventDefault(); flipCard(); }
   else if (e.key === '1' && session.flipped) { e.preventDefault(); session.multi ? rateStudyMulti(true) : rateStudy(true); }
   else if (e.key === '2' && session.flipped) { e.preventDefault(); session.multi ? rateStudyMulti(false) : rateStudy(false); }
@@ -2628,6 +2773,8 @@ const moonIcon = `<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>`;
 function applyTheme() {
   document.documentElement.setAttribute('data-theme', state.settings.theme);
   $('#themeIcon').innerHTML = state.settings.theme === 'dark' ? sunIcon : moonIcon;
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', state.settings.theme === 'dark' ? '#07070f' : '#f4f4fb');
 }
 $('#themeBtn').addEventListener('click', () => {
   state.settings.theme = state.settings.theme === 'dark' ? 'light' : 'dark';
